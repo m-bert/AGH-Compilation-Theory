@@ -2,6 +2,9 @@ from sly import Lexer
 
 
 class MyLexer(Lexer):
+    def __init__(self):
+        self.nesting_level = 0
+
     tokens = {
         ID,
         IF,
@@ -85,6 +88,22 @@ class MyLexer(Lexer):
     ID["ones"] = ONES
     ID["print"] = PRINT
 
+    @_(r'[\d,/\.\?]+[a-zA-Z0-9_]*')
+    def bad_token(self, t):
+        print(f"ERROR: Unknown token at line {self.lineno}: {t.value}")
+
+    @_(r'[\{\[\(]')
+    def lbrace(self, t):
+        t.type = t.value
+        self.nesting_level += 1
+        return t
+
+    @_(r'[\}\]\)]')
+    def rbrace(self, t):
+        t.type = t.value
+        self.nesting_level -= 1
+        return t
+
     @_(r"\d+\.\d*[E\d+]*|\.\d+")
     def FLOAT(self, t):
         t.value = float(t.value)  # Convert to a numeric value
@@ -96,10 +115,13 @@ class MyLexer(Lexer):
         return t
 
     # Define a rule so we can track line numbers
-
     @_(r"\n+")
     def ignore_newline(self, t):
         self.lineno += len(t.value)
+
+    def error(self, t):
+        print('Line %d: Bad character %r' % (self.lineno, t.value[0]))
+        self.index += 1
 
 
 if __name__ == "__main__":
@@ -121,11 +143,18 @@ if __name__ == "__main__":
                 res4 = 60.52E2;
                 str = "Hello world";
 
+                a3 = ?b
+
                 if (m==n) { 
                     if (m >= n) 
                         print res;
                 }"""
 
     lexer = MyLexer()
-    for tok in lexer.tokenize(data):
+    tokens = lexer.tokenize(data)
+
+    for tok in tokens:
         print(f"({tok.lineno}): {tok.type}({tok.value})")
+
+    if (lexer.nesting_level != 0):
+        print("Error: braces are not nested correctly")

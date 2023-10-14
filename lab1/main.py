@@ -88,10 +88,6 @@ class MyLexer(Lexer):
     ID["ones"] = ONES
     ID["print"] = PRINT
 
-    @_(r'[\d,/\.\?]+[a-zA-Z0-9_]*')
-    def bad_token(self, t):
-        print(f"ERROR: Unknown token at line {self.lineno}: {t.value}")
-
     @_(r'[\{\[\(]')
     def lbrace(self, t):
         t.type = t.value
@@ -122,6 +118,10 @@ class MyLexer(Lexer):
     def error(self, t):
         print('Line %d: Bad character %r' % (self.lineno, t.value[0]))
         self.index += 1
+
+    @_(r'[\d\.\?]+[a-zA-Z]*')
+    def bad_token(self, t):
+        print(f"ERROR: Unknown token at line {self.lineno}: {t.value}")
 
 
 if __name__ == "__main__":

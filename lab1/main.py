@@ -75,7 +75,7 @@ class MyLexer(Lexer):
 
     STRING = r"\".*\""
 
-    ID = r"[a-zA-Z_][a-zA-Z0-9_]*"
+    ID = r"[a-zA-Z_][\w_]*"
     ID["if"] = IF
     ID["else"] = ELSE
     ID["while"] = WHILE
@@ -158,3 +158,4 @@ if __name__ == "__main__":
 
     if (lexer.nesting_level != 0):
         print("Error: braces are not nested correctly")
+

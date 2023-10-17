@@ -41,7 +41,7 @@ class MyLexer(Lexer):
     COMMA = r","
     SEMICOLON = r";"
 
-    ID = r"[a-zA-Z_][a-zA-Z0-9_]*"
+    ID = r"[a-zA-Z_][\w_]*"
     ID["if"] = IF
     ID["else"] = ELSE
     ID["while"] = WHILE
@@ -82,4 +82,4 @@ if __name__ == "__main__":
     """
     lexer = MyLexer()
     for tok in lexer.tokenize(data):
-        print("type=%r, value=%r" % (tok.type, tok.value), tok.lineno)
+        print(f'({tok.lineno}): {tok.type}({tok.value})')

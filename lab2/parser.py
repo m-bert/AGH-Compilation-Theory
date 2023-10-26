@@ -12,18 +12,15 @@ class MyParser(Parser):
         ('left', MUL, DIV),
         ('left', DOTADD, DOTSUB),
         ('left', DOTMUL, DOTDIV),
-        ('left', '\''), # to też
-        ('nonassoc', LTE, GTE, EQ, NEQ, LT, GT),
-        ('left', '=', MULASSIGN, DIVASSIGN, ADDASSIGN, SUBASSIGN), # to chyba nic nie zmieniło
+        ('nonassoc', LTE, GTE, EQ, NEQ, LT, GT)
     )
     
-    @_('statements stmt',
-       'stmt')
+    @_('statements stmt_braces',
+       'stmt_braces')
     def statements(self, p):
         return None
     
-    @_('"{" statements "}"',
-       '";"',
+    @_('";"',
        'if_stmt',
        'while_stmt',
        'for_stmt',

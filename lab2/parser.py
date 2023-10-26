@@ -7,6 +7,16 @@ from scaner import MyLexer
 class MyParser(Parser):
     tokens = MyLexer.tokens
     
+    precedence = (
+        ('left', ADD, SUB),
+        ('left', MUL, DIV),
+        ('left', DOTADD, DOTSUB),
+        ('left', DOTMUL, DOTDIV),
+        ('left', '\''), # to też
+        ('nonassoc', LTE, GTE, EQ, NEQ, LT, GT),
+        ('left', '=', MULASSIGN, DIVASSIGN, ADDASSIGN, SUBASSIGN), # to chyba nic nie zmieniło
+    )
+    
     @_('statements stmt',
        'stmt')
     def statements(self, p):
@@ -178,4 +188,5 @@ if __name__ == '__main__':
     with open("lab2\ex3.txt") as file:
         data = file.read()
         parser.parse(lexer.tokenize(data))
+    
     

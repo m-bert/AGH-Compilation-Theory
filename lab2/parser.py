@@ -8,11 +8,11 @@ class MyParser(Parser):
     tokens = MyLexer.tokens
     
     precedence = (
+        ('nonassoc', LTE, GTE, EQ, NEQ, LT, GT),
         ('left', ADD, SUB),
         ('left', MUL, DIV),
         ('left', DOTADD, DOTSUB),
-        ('left', DOTMUL, DOTDIV),
-        ('nonassoc', LTE, GTE, EQ, NEQ, LT, GT)
+        ('left', DOTMUL, DOTDIV)
     )
     
     @_('statements stmt_braces',

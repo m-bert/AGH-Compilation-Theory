@@ -6,8 +6,11 @@ from scaner import MyLexer
 
 class MyParser(Parser):
     tokens = MyLexer.tokens
+    debugfile = 'parser.out'
     
     precedence = (
+        ('nonassoc', IFX),
+        ('nonassoc', ELSE),
         ('nonassoc', LTE, GTE, EQ, NEQ, LT, GT),
         ('left', ADD, SUB),
         ('left', MUL, DIV),
@@ -32,8 +35,8 @@ class MyParser(Parser):
     def stmt(self, p):
         return None
     
-    @_('IF "(" bool_expr ")" stmt_braces',
-       'IF "(" bool_expr ")" stmt_braces ELSE stmt_braces')
+    @_('IF "(" bool_expr ")" stmt_braces ELSE stmt_braces',
+       'IF "(" bool_expr ")" stmt_braces %prec IFX')
     def if_stmt(self, p):
         return None
     

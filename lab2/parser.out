@@ -1,0 +1,4336 @@
+Grammar:
+
+Rule 0     S' -> statements
+Rule 1     statements -> stmt_braces
+Rule 2     statements -> statements stmt_braces
+Rule 3     stmt -> RETURN expr ;
+Rule 4     stmt -> CONTINUE ;
+Rule 5     stmt -> BREAK ;
+Rule 6     stmt -> print_stmt
+Rule 7     stmt -> assign_expr
+Rule 8     stmt -> for_stmt
+Rule 9     stmt -> while_stmt
+Rule 10    stmt -> if_stmt
+Rule 11    stmt -> ;
+Rule 12    if_stmt -> IF ( bool_expr ) stmt_braces  [precedence=nonassoc, level=1]
+Rule 13    if_stmt -> IF ( bool_expr ) stmt_braces ELSE stmt_braces  [precedence=nonassoc, level=2]
+Rule 14    while_stmt -> WHILE ( bool_expr ) stmt_braces
+Rule 15    for_stmt -> FOR ID = id_int : id_int stmt_braces
+Rule 16    id_int -> INTNUM
+Rule 17    id_int -> ID
+Rule 18    stmt_braces -> stmt
+Rule 19    stmt_braces -> { statements }
+Rule 20    print_stmt -> PRINT print_rek ;
+Rule 21    print_rek -> value
+Rule 22    print_rek -> print_rek , value
+Rule 23    value -> STRING
+Rule 24    value -> ID
+Rule 25    value -> FLOAT
+Rule 26    value -> INTNUM
+Rule 27    inv_num -> SUB FLOAT
+Rule 28    inv_num -> SUB INTNUM
+Rule 29    inv_num -> SUB ID
+Rule 30    expr -> matrix_ref
+Rule 31    expr -> matrix_funcs
+Rule 32    expr -> matrix_transpose
+Rule 33    expr -> matrix_bin_expr
+Rule 34    expr -> relation_expr
+Rule 35    expr -> assign_expr
+Rule 36    expr -> bin_expr
+Rule 37    expr -> inv_num
+Rule 38    expr -> value
+Rule 39    bool_expr -> relation_expr
+Rule 40    bool_expr -> bin_expr
+Rule 41    bin_expr -> expr DIV expr  [precedence=left, level=5]
+Rule 42    bin_expr -> expr MUL expr  [precedence=left, level=5]
+Rule 43    bin_expr -> expr SUB expr  [precedence=left, level=4]
+Rule 44    bin_expr -> expr ADD expr  [precedence=left, level=4]
+Rule 45    assign_expr -> id_ref DIVASSIGN expr ;
+Rule 46    assign_expr -> id_ref MULASSIGN expr ;
+Rule 47    assign_expr -> id_ref SUBASSIGN expr ;
+Rule 48    assign_expr -> id_ref ADDASSIGN expr ;
+Rule 49    assign_expr -> id_ref = matrix ;
+Rule 50    assign_expr -> id_ref = expr ;
+Rule 51    id_ref -> matrix_ref
+Rule 52    id_ref -> ID
+Rule 53    relation_expr -> expr NEQ expr  [precedence=nonassoc, level=3]
+Rule 54    relation_expr -> expr EQ expr  [precedence=nonassoc, level=3]
+Rule 55    relation_expr -> expr GTE expr  [precedence=nonassoc, level=3]
+Rule 56    relation_expr -> expr LTE expr  [precedence=nonassoc, level=3]
+Rule 57    relation_expr -> expr GT expr  [precedence=nonassoc, level=3]
+Rule 58    relation_expr -> expr LT expr  [precedence=nonassoc, level=3]
+Rule 59    matrix_bin_expr -> expr DOTDIV expr  [precedence=left, level=7]
+Rule 60    matrix_bin_expr -> expr DOTMUL expr  [precedence=left, level=7]
+Rule 61    matrix_bin_expr -> expr DOTSUB expr  [precedence=left, level=6]
+Rule 62    matrix_bin_expr -> expr DOTADD expr  [precedence=left, level=6]
+Rule 63    matrix_transpose -> matrix '
+Rule 64    matrix_transpose -> ID '
+Rule 65    matrix_funcs -> EYE ( INTNUM )
+Rule 66    matrix_funcs -> ONES ( INTNUM )
+Rule 67    matrix_funcs -> ZEROS ( INTNUM )
+Rule 68    matrix_ref -> ID [ string_of_num ]
+Rule 69    matrix -> [ matrix_rows ]
+Rule 70    matrix -> [ ]
+Rule 71    matrix_rows -> matrix_rows , matrix_row
+Rule 72    matrix_rows -> matrix_row
+Rule 73    matrix_row -> [ string_of_num ]
+Rule 74    matrix_row -> [ ]
+Rule 75    string_of_num -> string_of_num , INTNUM
+Rule 76    string_of_num -> INTNUM
+
+Terminals, with rules where they appear:
+
+'                    : 63 64
+(                    : 12 13 14 65 66 67
+)                    : 12 13 14 65 66 67
+,                    : 22 71 75
+:                    : 15
+;                    : 3 4 5 11 20 45 46 47 48 49 50
+=                    : 15 49 50
+ADD                  : 44
+ADDASSIGN            : 48
+BREAK                : 5
+CONTINUE             : 4
+DIV                  : 41
+DIVASSIGN            : 45
+DOTADD               : 62
+DOTDIV               : 59
+DOTMUL               : 60
+DOTSUB               : 61
+ELSE                 : 13
+EQ                   : 54
+EYE                  : 65
+FLOAT                : 25 27
+FOR                  : 15
+GT                   : 57
+GTE                  : 55
+ID                   : 15 17 24 29 52 64 68
+IF                   : 12 13
+INTNUM               : 16 26 28 65 66 67 75 76
+LT                   : 58
+LTE                  : 56
+MUL                  : 42
+MULASSIGN            : 46
+NEQ                  : 53
+ONES                 : 66
+PRINT                : 20
+RETURN               : 3
+STRING               : 23
+SUB                  : 27 28 29 43
+SUBASSIGN            : 47
+WHILE                : 14
+ZEROS                : 67
+[                    : 68 69 70 73 74
+]                    : 68 69 70 73 74
+error                : 
+{                    : 19
+}                    : 19
+
+Nonterminals, with rules where they appear:
+
+assign_expr          : 7 35
+bin_expr             : 36 40
+bool_expr            : 12 13 14
+expr                 : 3 41 41 42 42 43 43 44 44 45 46 47 48 50 53 53 54 54 55 55 56 56 57 57 58 58 59 59 60 60 61 61 62 62
+for_stmt             : 8
+id_int               : 15 15
+id_ref               : 45 46 47 48 49 50
+if_stmt              : 10
+inv_num              : 37
+matrix               : 49 63
+matrix_bin_expr      : 33
+matrix_funcs         : 31
+matrix_ref           : 30 51
+matrix_row           : 71 72
+matrix_rows          : 69 71
+matrix_transpose     : 32
+print_rek            : 20 22
+print_stmt           : 6
+relation_expr        : 34 39
+statements           : 2 19 0
+stmt                 : 18
+stmt_braces          : 1 2 12 13 13 14 15
+string_of_num        : 68 73 75
+value                : 21 22 38
+while_stmt           : 9
+
+
+state 0
+
+    (0) S' -> . statements
+    (1) statements -> . stmt_braces
+    (2) statements -> . statements stmt_braces
+    (18) stmt_braces -> . stmt
+    (19) stmt_braces -> . { statements }
+    (3) stmt -> . RETURN expr ;
+    (4) stmt -> . CONTINUE ;
+    (5) stmt -> . BREAK ;
+    (6) stmt -> . print_stmt
+    (7) stmt -> . assign_expr
+    (8) stmt -> . for_stmt
+    (9) stmt -> . while_stmt
+    (10) stmt -> . if_stmt
+    (11) stmt -> . ;
+    (20) print_stmt -> . PRINT print_rek ;
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (15) for_stmt -> . FOR ID = id_int : id_int stmt_braces
+    (14) while_stmt -> . WHILE ( bool_expr ) stmt_braces
+    (12) if_stmt -> . IF ( bool_expr ) stmt_braces
+    (13) if_stmt -> . IF ( bool_expr ) stmt_braces ELSE stmt_braces
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    (68) matrix_ref -> . ID [ string_of_num ]
+    {               shift and go to state 4
+    RETURN          shift and go to state 5
+    CONTINUE        shift and go to state 7
+    BREAK           shift and go to state 8
+    ;               shift and go to state 6
+    PRINT           shift and go to state 14
+    FOR             shift and go to state 16
+    WHILE           shift and go to state 18
+    IF              shift and go to state 19
+    ID              shift and go to state 17
+
+    statements                     shift and go to state 1
+    stmt_braces                    shift and go to state 2
+    stmt                           shift and go to state 3
+    print_stmt                     shift and go to state 9
+    assign_expr                    shift and go to state 10
+    for_stmt                       shift and go to state 11
+    while_stmt                     shift and go to state 12
+    if_stmt                        shift and go to state 13
+    id_ref                         shift and go to state 15
+    matrix_ref                     shift and go to state 20
+
+state 1
+
+    (0) S' -> statements .
+    (2) statements -> statements . stmt_braces
+    (18) stmt_braces -> . stmt
+    (19) stmt_braces -> . { statements }
+    (3) stmt -> . RETURN expr ;
+    (4) stmt -> . CONTINUE ;
+    (5) stmt -> . BREAK ;
+    (6) stmt -> . print_stmt
+    (7) stmt -> . assign_expr
+    (8) stmt -> . for_stmt
+    (9) stmt -> . while_stmt
+    (10) stmt -> . if_stmt
+    (11) stmt -> . ;
+    (20) print_stmt -> . PRINT print_rek ;
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (15) for_stmt -> . FOR ID = id_int : id_int stmt_braces
+    (14) while_stmt -> . WHILE ( bool_expr ) stmt_braces
+    (12) if_stmt -> . IF ( bool_expr ) stmt_braces
+    (13) if_stmt -> . IF ( bool_expr ) stmt_braces ELSE stmt_braces
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    (68) matrix_ref -> . ID [ string_of_num ]
+    {               shift and go to state 4
+    RETURN          shift and go to state 5
+    CONTINUE        shift and go to state 7
+    BREAK           shift and go to state 8
+    ;               shift and go to state 6
+    PRINT           shift and go to state 14
+    FOR             shift and go to state 16
+    WHILE           shift and go to state 18
+    IF              shift and go to state 19
+    ID              shift and go to state 17
+
+    stmt_braces                    shift and go to state 21
+    stmt                           shift and go to state 3
+    print_stmt                     shift and go to state 9
+    assign_expr                    shift and go to state 10
+    for_stmt                       shift and go to state 11
+    while_stmt                     shift and go to state 12
+    if_stmt                        shift and go to state 13
+    id_ref                         shift and go to state 15
+    matrix_ref                     shift and go to state 20
+
+state 2
+
+    (1) statements -> stmt_braces .
+    {               reduce using rule 1 (statements -> stmt_braces .)
+    RETURN          reduce using rule 1 (statements -> stmt_braces .)
+    CONTINUE        reduce using rule 1 (statements -> stmt_braces .)
+    BREAK           reduce using rule 1 (statements -> stmt_braces .)
+    ;               reduce using rule 1 (statements -> stmt_braces .)
+    PRINT           reduce using rule 1 (statements -> stmt_braces .)
+    FOR             reduce using rule 1 (statements -> stmt_braces .)
+    WHILE           reduce using rule 1 (statements -> stmt_braces .)
+    IF              reduce using rule 1 (statements -> stmt_braces .)
+    ID              reduce using rule 1 (statements -> stmt_braces .)
+    $end            reduce using rule 1 (statements -> stmt_braces .)
+    }               reduce using rule 1 (statements -> stmt_braces .)
+
+
+state 3
+
+    (18) stmt_braces -> stmt .
+    {               reduce using rule 18 (stmt_braces -> stmt .)
+    RETURN          reduce using rule 18 (stmt_braces -> stmt .)
+    CONTINUE        reduce using rule 18 (stmt_braces -> stmt .)
+    BREAK           reduce using rule 18 (stmt_braces -> stmt .)
+    ;               reduce using rule 18 (stmt_braces -> stmt .)
+    PRINT           reduce using rule 18 (stmt_braces -> stmt .)
+    FOR             reduce using rule 18 (stmt_braces -> stmt .)
+    WHILE           reduce using rule 18 (stmt_braces -> stmt .)
+    IF              reduce using rule 18 (stmt_braces -> stmt .)
+    ID              reduce using rule 18 (stmt_braces -> stmt .)
+    $end            reduce using rule 18 (stmt_braces -> stmt .)
+    }               reduce using rule 18 (stmt_braces -> stmt .)
+    ELSE            reduce using rule 18 (stmt_braces -> stmt .)
+
+
+state 4
+
+    (19) stmt_braces -> { . statements }
+    (1) statements -> . stmt_braces
+    (2) statements -> . statements stmt_braces
+    (18) stmt_braces -> . stmt
+    (19) stmt_braces -> . { statements }
+    (3) stmt -> . RETURN expr ;
+    (4) stmt -> . CONTINUE ;
+    (5) stmt -> . BREAK ;
+    (6) stmt -> . print_stmt
+    (7) stmt -> . assign_expr
+    (8) stmt -> . for_stmt
+    (9) stmt -> . while_stmt
+    (10) stmt -> . if_stmt
+    (11) stmt -> . ;
+    (20) print_stmt -> . PRINT print_rek ;
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (15) for_stmt -> . FOR ID = id_int : id_int stmt_braces
+    (14) while_stmt -> . WHILE ( bool_expr ) stmt_braces
+    (12) if_stmt -> . IF ( bool_expr ) stmt_braces
+    (13) if_stmt -> . IF ( bool_expr ) stmt_braces ELSE stmt_braces
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    (68) matrix_ref -> . ID [ string_of_num ]
+    {               shift and go to state 4
+    RETURN          shift and go to state 5
+    CONTINUE        shift and go to state 7
+    BREAK           shift and go to state 8
+    ;               shift and go to state 6
+    PRINT           shift and go to state 14
+    FOR             shift and go to state 16
+    WHILE           shift and go to state 18
+    IF              shift and go to state 19
+    ID              shift and go to state 17
+
+    statements                     shift and go to state 22
+    stmt_braces                    shift and go to state 2
+    stmt                           shift and go to state 3
+    print_stmt                     shift and go to state 9
+    assign_expr                    shift and go to state 10
+    for_stmt                       shift and go to state 11
+    while_stmt                     shift and go to state 12
+    if_stmt                        shift and go to state 13
+    id_ref                         shift and go to state 15
+    matrix_ref                     shift and go to state 20
+
+state 5
+
+    (3) stmt -> RETURN . expr ;
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+    [               shift and go to state 34
+
+    expr                           shift and go to state 23
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    relation_expr                  shift and go to state 28
+    assign_expr                    shift and go to state 29
+    bin_expr                       shift and go to state 30
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+    matrix                         shift and go to state 39
+    id_ref                         shift and go to state 15
+
+state 6
+
+    (11) stmt -> ; .
+    {               reduce using rule 11 (stmt -> ; .)
+    RETURN          reduce using rule 11 (stmt -> ; .)
+    CONTINUE        reduce using rule 11 (stmt -> ; .)
+    BREAK           reduce using rule 11 (stmt -> ; .)
+    ;               reduce using rule 11 (stmt -> ; .)
+    PRINT           reduce using rule 11 (stmt -> ; .)
+    FOR             reduce using rule 11 (stmt -> ; .)
+    WHILE           reduce using rule 11 (stmt -> ; .)
+    IF              reduce using rule 11 (stmt -> ; .)
+    ID              reduce using rule 11 (stmt -> ; .)
+    $end            reduce using rule 11 (stmt -> ; .)
+    }               reduce using rule 11 (stmt -> ; .)
+    ELSE            reduce using rule 11 (stmt -> ; .)
+
+
+state 7
+
+    (4) stmt -> CONTINUE . ;
+    ;               shift and go to state 43
+
+
+state 8
+
+    (5) stmt -> BREAK . ;
+    ;               shift and go to state 44
+
+
+state 9
+
+    (6) stmt -> print_stmt .
+    {               reduce using rule 6 (stmt -> print_stmt .)
+    RETURN          reduce using rule 6 (stmt -> print_stmt .)
+    CONTINUE        reduce using rule 6 (stmt -> print_stmt .)
+    BREAK           reduce using rule 6 (stmt -> print_stmt .)
+    ;               reduce using rule 6 (stmt -> print_stmt .)
+    PRINT           reduce using rule 6 (stmt -> print_stmt .)
+    FOR             reduce using rule 6 (stmt -> print_stmt .)
+    WHILE           reduce using rule 6 (stmt -> print_stmt .)
+    IF              reduce using rule 6 (stmt -> print_stmt .)
+    ID              reduce using rule 6 (stmt -> print_stmt .)
+    $end            reduce using rule 6 (stmt -> print_stmt .)
+    }               reduce using rule 6 (stmt -> print_stmt .)
+    ELSE            reduce using rule 6 (stmt -> print_stmt .)
+
+
+state 10
+
+    (7) stmt -> assign_expr .
+    {               reduce using rule 7 (stmt -> assign_expr .)
+    RETURN          reduce using rule 7 (stmt -> assign_expr .)
+    CONTINUE        reduce using rule 7 (stmt -> assign_expr .)
+    BREAK           reduce using rule 7 (stmt -> assign_expr .)
+    ;               reduce using rule 7 (stmt -> assign_expr .)
+    PRINT           reduce using rule 7 (stmt -> assign_expr .)
+    FOR             reduce using rule 7 (stmt -> assign_expr .)
+    WHILE           reduce using rule 7 (stmt -> assign_expr .)
+    IF              reduce using rule 7 (stmt -> assign_expr .)
+    ID              reduce using rule 7 (stmt -> assign_expr .)
+    $end            reduce using rule 7 (stmt -> assign_expr .)
+    }               reduce using rule 7 (stmt -> assign_expr .)
+    ELSE            reduce using rule 7 (stmt -> assign_expr .)
+
+
+state 11
+
+    (8) stmt -> for_stmt .
+    {               reduce using rule 8 (stmt -> for_stmt .)
+    RETURN          reduce using rule 8 (stmt -> for_stmt .)
+    CONTINUE        reduce using rule 8 (stmt -> for_stmt .)
+    BREAK           reduce using rule 8 (stmt -> for_stmt .)
+    ;               reduce using rule 8 (stmt -> for_stmt .)
+    PRINT           reduce using rule 8 (stmt -> for_stmt .)
+    FOR             reduce using rule 8 (stmt -> for_stmt .)
+    WHILE           reduce using rule 8 (stmt -> for_stmt .)
+    IF              reduce using rule 8 (stmt -> for_stmt .)
+    ID              reduce using rule 8 (stmt -> for_stmt .)
+    $end            reduce using rule 8 (stmt -> for_stmt .)
+    }               reduce using rule 8 (stmt -> for_stmt .)
+    ELSE            reduce using rule 8 (stmt -> for_stmt .)
+
+
+state 12
+
+    (9) stmt -> while_stmt .
+    {               reduce using rule 9 (stmt -> while_stmt .)
+    RETURN          reduce using rule 9 (stmt -> while_stmt .)
+    CONTINUE        reduce using rule 9 (stmt -> while_stmt .)
+    BREAK           reduce using rule 9 (stmt -> while_stmt .)
+    ;               reduce using rule 9 (stmt -> while_stmt .)
+    PRINT           reduce using rule 9 (stmt -> while_stmt .)
+    FOR             reduce using rule 9 (stmt -> while_stmt .)
+    WHILE           reduce using rule 9 (stmt -> while_stmt .)
+    IF              reduce using rule 9 (stmt -> while_stmt .)
+    ID              reduce using rule 9 (stmt -> while_stmt .)
+    $end            reduce using rule 9 (stmt -> while_stmt .)
+    }               reduce using rule 9 (stmt -> while_stmt .)
+    ELSE            reduce using rule 9 (stmt -> while_stmt .)
+
+
+state 13
+
+    (10) stmt -> if_stmt .
+    {               reduce using rule 10 (stmt -> if_stmt .)
+    RETURN          reduce using rule 10 (stmt -> if_stmt .)
+    CONTINUE        reduce using rule 10 (stmt -> if_stmt .)
+    BREAK           reduce using rule 10 (stmt -> if_stmt .)
+    ;               reduce using rule 10 (stmt -> if_stmt .)
+    PRINT           reduce using rule 10 (stmt -> if_stmt .)
+    FOR             reduce using rule 10 (stmt -> if_stmt .)
+    WHILE           reduce using rule 10 (stmt -> if_stmt .)
+    IF              reduce using rule 10 (stmt -> if_stmt .)
+    ID              reduce using rule 10 (stmt -> if_stmt .)
+    $end            reduce using rule 10 (stmt -> if_stmt .)
+    }               reduce using rule 10 (stmt -> if_stmt .)
+    ELSE            reduce using rule 10 (stmt -> if_stmt .)
+
+
+state 14
+
+    (20) print_stmt -> PRINT . print_rek ;
+    (21) print_rek -> . value
+    (22) print_rek -> . print_rek , value
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    STRING          shift and go to state 42
+    ID              shift and go to state 47
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+
+    print_rek                      shift and go to state 45
+    value                          shift and go to state 46
+
+state 15
+
+    (45) assign_expr -> id_ref . DIVASSIGN expr ;
+    (46) assign_expr -> id_ref . MULASSIGN expr ;
+    (47) assign_expr -> id_ref . SUBASSIGN expr ;
+    (48) assign_expr -> id_ref . ADDASSIGN expr ;
+    (49) assign_expr -> id_ref . = matrix ;
+    (50) assign_expr -> id_ref . = expr ;
+    DIVASSIGN       shift and go to state 48
+    MULASSIGN       shift and go to state 49
+    SUBASSIGN       shift and go to state 50
+    ADDASSIGN       shift and go to state 51
+    =               shift and go to state 52
+
+
+state 16
+
+    (15) for_stmt -> FOR . ID = id_int : id_int stmt_braces
+    ID              shift and go to state 53
+
+
+state 17
+
+    (52) id_ref -> ID .
+    (68) matrix_ref -> ID . [ string_of_num ]
+    DIVASSIGN       reduce using rule 52 (id_ref -> ID .)
+    MULASSIGN       reduce using rule 52 (id_ref -> ID .)
+    SUBASSIGN       reduce using rule 52 (id_ref -> ID .)
+    ADDASSIGN       reduce using rule 52 (id_ref -> ID .)
+    =               reduce using rule 52 (id_ref -> ID .)
+    [               shift and go to state 54
+
+
+state 18
+
+    (14) while_stmt -> WHILE . ( bool_expr ) stmt_braces
+    (               shift and go to state 55
+
+
+state 19
+
+    (12) if_stmt -> IF . ( bool_expr ) stmt_braces
+    (13) if_stmt -> IF . ( bool_expr ) stmt_braces ELSE stmt_braces
+    (               shift and go to state 56
+
+
+state 20
+
+    (51) id_ref -> matrix_ref .
+    DIVASSIGN       reduce using rule 51 (id_ref -> matrix_ref .)
+    MULASSIGN       reduce using rule 51 (id_ref -> matrix_ref .)
+    SUBASSIGN       reduce using rule 51 (id_ref -> matrix_ref .)
+    ADDASSIGN       reduce using rule 51 (id_ref -> matrix_ref .)
+    =               reduce using rule 51 (id_ref -> matrix_ref .)
+
+
+state 21
+
+    (2) statements -> statements stmt_braces .
+    {               reduce using rule 2 (statements -> statements stmt_braces .)
+    RETURN          reduce using rule 2 (statements -> statements stmt_braces .)
+    CONTINUE        reduce using rule 2 (statements -> statements stmt_braces .)
+    BREAK           reduce using rule 2 (statements -> statements stmt_braces .)
+    ;               reduce using rule 2 (statements -> statements stmt_braces .)
+    PRINT           reduce using rule 2 (statements -> statements stmt_braces .)
+    FOR             reduce using rule 2 (statements -> statements stmt_braces .)
+    WHILE           reduce using rule 2 (statements -> statements stmt_braces .)
+    IF              reduce using rule 2 (statements -> statements stmt_braces .)
+    ID              reduce using rule 2 (statements -> statements stmt_braces .)
+    $end            reduce using rule 2 (statements -> statements stmt_braces .)
+    }               reduce using rule 2 (statements -> statements stmt_braces .)
+
+
+state 22
+
+    (19) stmt_braces -> { statements . }
+    (2) statements -> statements . stmt_braces
+    (18) stmt_braces -> . stmt
+    (19) stmt_braces -> . { statements }
+    (3) stmt -> . RETURN expr ;
+    (4) stmt -> . CONTINUE ;
+    (5) stmt -> . BREAK ;
+    (6) stmt -> . print_stmt
+    (7) stmt -> . assign_expr
+    (8) stmt -> . for_stmt
+    (9) stmt -> . while_stmt
+    (10) stmt -> . if_stmt
+    (11) stmt -> . ;
+    (20) print_stmt -> . PRINT print_rek ;
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (15) for_stmt -> . FOR ID = id_int : id_int stmt_braces
+    (14) while_stmt -> . WHILE ( bool_expr ) stmt_braces
+    (12) if_stmt -> . IF ( bool_expr ) stmt_braces
+    (13) if_stmt -> . IF ( bool_expr ) stmt_braces ELSE stmt_braces
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    (68) matrix_ref -> . ID [ string_of_num ]
+    }               shift and go to state 57
+    {               shift and go to state 4
+    RETURN          shift and go to state 5
+    CONTINUE        shift and go to state 7
+    BREAK           shift and go to state 8
+    ;               shift and go to state 6
+    PRINT           shift and go to state 14
+    FOR             shift and go to state 16
+    WHILE           shift and go to state 18
+    IF              shift and go to state 19
+    ID              shift and go to state 17
+
+    stmt_braces                    shift and go to state 21
+    stmt                           shift and go to state 3
+    print_stmt                     shift and go to state 9
+    assign_expr                    shift and go to state 10
+    for_stmt                       shift and go to state 11
+    while_stmt                     shift and go to state 12
+    if_stmt                        shift and go to state 13
+    id_ref                         shift and go to state 15
+    matrix_ref                     shift and go to state 20
+
+state 23
+
+    (3) stmt -> RETURN expr . ;
+    (59) matrix_bin_expr -> expr . DOTDIV expr
+    (60) matrix_bin_expr -> expr . DOTMUL expr
+    (61) matrix_bin_expr -> expr . DOTSUB expr
+    (62) matrix_bin_expr -> expr . DOTADD expr
+    (53) relation_expr -> expr . NEQ expr
+    (54) relation_expr -> expr . EQ expr
+    (55) relation_expr -> expr . GTE expr
+    (56) relation_expr -> expr . LTE expr
+    (57) relation_expr -> expr . GT expr
+    (58) relation_expr -> expr . LT expr
+    (41) bin_expr -> expr . DIV expr
+    (42) bin_expr -> expr . MUL expr
+    (43) bin_expr -> expr . SUB expr
+    (44) bin_expr -> expr . ADD expr
+    ;               shift and go to state 58
+    DOTDIV          shift and go to state 59
+    DOTMUL          shift and go to state 60
+    DOTSUB          shift and go to state 61
+    DOTADD          shift and go to state 62
+    NEQ             shift and go to state 63
+    EQ              shift and go to state 64
+    GTE             shift and go to state 65
+    LTE             shift and go to state 66
+    GT              shift and go to state 67
+    LT              shift and go to state 68
+    DIV             shift and go to state 69
+    MUL             shift and go to state 70
+    SUB             shift and go to state 71
+    ADD             shift and go to state 72
+
+
+state 24
+
+    (30) expr -> matrix_ref .
+    (51) id_ref -> matrix_ref .
+    ;               reduce using rule 30 (expr -> matrix_ref .)
+    DOTDIV          reduce using rule 30 (expr -> matrix_ref .)
+    DOTMUL          reduce using rule 30 (expr -> matrix_ref .)
+    DOTSUB          reduce using rule 30 (expr -> matrix_ref .)
+    DOTADD          reduce using rule 30 (expr -> matrix_ref .)
+    NEQ             reduce using rule 30 (expr -> matrix_ref .)
+    EQ              reduce using rule 30 (expr -> matrix_ref .)
+    GTE             reduce using rule 30 (expr -> matrix_ref .)
+    LTE             reduce using rule 30 (expr -> matrix_ref .)
+    GT              reduce using rule 30 (expr -> matrix_ref .)
+    LT              reduce using rule 30 (expr -> matrix_ref .)
+    DIV             reduce using rule 30 (expr -> matrix_ref .)
+    MUL             reduce using rule 30 (expr -> matrix_ref .)
+    SUB             reduce using rule 30 (expr -> matrix_ref .)
+    ADD             reduce using rule 30 (expr -> matrix_ref .)
+    )               reduce using rule 30 (expr -> matrix_ref .)
+    DIVASSIGN       reduce using rule 51 (id_ref -> matrix_ref .)
+    MULASSIGN       reduce using rule 51 (id_ref -> matrix_ref .)
+    SUBASSIGN       reduce using rule 51 (id_ref -> matrix_ref .)
+    ADDASSIGN       reduce using rule 51 (id_ref -> matrix_ref .)
+    =               reduce using rule 51 (id_ref -> matrix_ref .)
+
+
+state 25
+
+    (31) expr -> matrix_funcs .
+    ;               reduce using rule 31 (expr -> matrix_funcs .)
+    DOTDIV          reduce using rule 31 (expr -> matrix_funcs .)
+    DOTMUL          reduce using rule 31 (expr -> matrix_funcs .)
+    DOTSUB          reduce using rule 31 (expr -> matrix_funcs .)
+    DOTADD          reduce using rule 31 (expr -> matrix_funcs .)
+    NEQ             reduce using rule 31 (expr -> matrix_funcs .)
+    EQ              reduce using rule 31 (expr -> matrix_funcs .)
+    GTE             reduce using rule 31 (expr -> matrix_funcs .)
+    LTE             reduce using rule 31 (expr -> matrix_funcs .)
+    GT              reduce using rule 31 (expr -> matrix_funcs .)
+    LT              reduce using rule 31 (expr -> matrix_funcs .)
+    DIV             reduce using rule 31 (expr -> matrix_funcs .)
+    MUL             reduce using rule 31 (expr -> matrix_funcs .)
+    SUB             reduce using rule 31 (expr -> matrix_funcs .)
+    ADD             reduce using rule 31 (expr -> matrix_funcs .)
+    )               reduce using rule 31 (expr -> matrix_funcs .)
+
+
+state 26
+
+    (32) expr -> matrix_transpose .
+    ;               reduce using rule 32 (expr -> matrix_transpose .)
+    DOTDIV          reduce using rule 32 (expr -> matrix_transpose .)
+    DOTMUL          reduce using rule 32 (expr -> matrix_transpose .)
+    DOTSUB          reduce using rule 32 (expr -> matrix_transpose .)
+    DOTADD          reduce using rule 32 (expr -> matrix_transpose .)
+    NEQ             reduce using rule 32 (expr -> matrix_transpose .)
+    EQ              reduce using rule 32 (expr -> matrix_transpose .)
+    GTE             reduce using rule 32 (expr -> matrix_transpose .)
+    LTE             reduce using rule 32 (expr -> matrix_transpose .)
+    GT              reduce using rule 32 (expr -> matrix_transpose .)
+    LT              reduce using rule 32 (expr -> matrix_transpose .)
+    DIV             reduce using rule 32 (expr -> matrix_transpose .)
+    MUL             reduce using rule 32 (expr -> matrix_transpose .)
+    SUB             reduce using rule 32 (expr -> matrix_transpose .)
+    ADD             reduce using rule 32 (expr -> matrix_transpose .)
+    )               reduce using rule 32 (expr -> matrix_transpose .)
+
+
+state 27
+
+    (33) expr -> matrix_bin_expr .
+    ;               reduce using rule 33 (expr -> matrix_bin_expr .)
+    DOTDIV          reduce using rule 33 (expr -> matrix_bin_expr .)
+    DOTMUL          reduce using rule 33 (expr -> matrix_bin_expr .)
+    DOTSUB          reduce using rule 33 (expr -> matrix_bin_expr .)
+    DOTADD          reduce using rule 33 (expr -> matrix_bin_expr .)
+    NEQ             reduce using rule 33 (expr -> matrix_bin_expr .)
+    EQ              reduce using rule 33 (expr -> matrix_bin_expr .)
+    GTE             reduce using rule 33 (expr -> matrix_bin_expr .)
+    LTE             reduce using rule 33 (expr -> matrix_bin_expr .)
+    GT              reduce using rule 33 (expr -> matrix_bin_expr .)
+    LT              reduce using rule 33 (expr -> matrix_bin_expr .)
+    DIV             reduce using rule 33 (expr -> matrix_bin_expr .)
+    MUL             reduce using rule 33 (expr -> matrix_bin_expr .)
+    SUB             reduce using rule 33 (expr -> matrix_bin_expr .)
+    ADD             reduce using rule 33 (expr -> matrix_bin_expr .)
+    )               reduce using rule 33 (expr -> matrix_bin_expr .)
+
+
+state 28
+
+    (34) expr -> relation_expr .
+    ;               reduce using rule 34 (expr -> relation_expr .)
+    DOTDIV          reduce using rule 34 (expr -> relation_expr .)
+    DOTMUL          reduce using rule 34 (expr -> relation_expr .)
+    DOTSUB          reduce using rule 34 (expr -> relation_expr .)
+    DOTADD          reduce using rule 34 (expr -> relation_expr .)
+    NEQ             reduce using rule 34 (expr -> relation_expr .)
+    EQ              reduce using rule 34 (expr -> relation_expr .)
+    GTE             reduce using rule 34 (expr -> relation_expr .)
+    LTE             reduce using rule 34 (expr -> relation_expr .)
+    GT              reduce using rule 34 (expr -> relation_expr .)
+    LT              reduce using rule 34 (expr -> relation_expr .)
+    DIV             reduce using rule 34 (expr -> relation_expr .)
+    MUL             reduce using rule 34 (expr -> relation_expr .)
+    SUB             reduce using rule 34 (expr -> relation_expr .)
+    ADD             reduce using rule 34 (expr -> relation_expr .)
+    )               reduce using rule 34 (expr -> relation_expr .)
+
+
+state 29
+
+    (35) expr -> assign_expr .
+    ;               reduce using rule 35 (expr -> assign_expr .)
+    DOTDIV          reduce using rule 35 (expr -> assign_expr .)
+    DOTMUL          reduce using rule 35 (expr -> assign_expr .)
+    DOTSUB          reduce using rule 35 (expr -> assign_expr .)
+    DOTADD          reduce using rule 35 (expr -> assign_expr .)
+    NEQ             reduce using rule 35 (expr -> assign_expr .)
+    EQ              reduce using rule 35 (expr -> assign_expr .)
+    GTE             reduce using rule 35 (expr -> assign_expr .)
+    LTE             reduce using rule 35 (expr -> assign_expr .)
+    GT              reduce using rule 35 (expr -> assign_expr .)
+    LT              reduce using rule 35 (expr -> assign_expr .)
+    DIV             reduce using rule 35 (expr -> assign_expr .)
+    MUL             reduce using rule 35 (expr -> assign_expr .)
+    SUB             reduce using rule 35 (expr -> assign_expr .)
+    ADD             reduce using rule 35 (expr -> assign_expr .)
+    )               reduce using rule 35 (expr -> assign_expr .)
+
+
+state 30
+
+    (36) expr -> bin_expr .
+    ;               reduce using rule 36 (expr -> bin_expr .)
+    DOTDIV          reduce using rule 36 (expr -> bin_expr .)
+    DOTMUL          reduce using rule 36 (expr -> bin_expr .)
+    DOTSUB          reduce using rule 36 (expr -> bin_expr .)
+    DOTADD          reduce using rule 36 (expr -> bin_expr .)
+    NEQ             reduce using rule 36 (expr -> bin_expr .)
+    EQ              reduce using rule 36 (expr -> bin_expr .)
+    GTE             reduce using rule 36 (expr -> bin_expr .)
+    LTE             reduce using rule 36 (expr -> bin_expr .)
+    GT              reduce using rule 36 (expr -> bin_expr .)
+    LT              reduce using rule 36 (expr -> bin_expr .)
+    DIV             reduce using rule 36 (expr -> bin_expr .)
+    MUL             reduce using rule 36 (expr -> bin_expr .)
+    SUB             reduce using rule 36 (expr -> bin_expr .)
+    ADD             reduce using rule 36 (expr -> bin_expr .)
+    )               reduce using rule 36 (expr -> bin_expr .)
+
+
+state 31
+
+    (37) expr -> inv_num .
+    ;               reduce using rule 37 (expr -> inv_num .)
+    DOTDIV          reduce using rule 37 (expr -> inv_num .)
+    DOTMUL          reduce using rule 37 (expr -> inv_num .)
+    DOTSUB          reduce using rule 37 (expr -> inv_num .)
+    DOTADD          reduce using rule 37 (expr -> inv_num .)
+    NEQ             reduce using rule 37 (expr -> inv_num .)
+    EQ              reduce using rule 37 (expr -> inv_num .)
+    GTE             reduce using rule 37 (expr -> inv_num .)
+    LTE             reduce using rule 37 (expr -> inv_num .)
+    GT              reduce using rule 37 (expr -> inv_num .)
+    LT              reduce using rule 37 (expr -> inv_num .)
+    DIV             reduce using rule 37 (expr -> inv_num .)
+    MUL             reduce using rule 37 (expr -> inv_num .)
+    SUB             reduce using rule 37 (expr -> inv_num .)
+    ADD             reduce using rule 37 (expr -> inv_num .)
+    )               reduce using rule 37 (expr -> inv_num .)
+
+
+state 32
+
+    (38) expr -> value .
+    ;               reduce using rule 38 (expr -> value .)
+    DOTDIV          reduce using rule 38 (expr -> value .)
+    DOTMUL          reduce using rule 38 (expr -> value .)
+    DOTSUB          reduce using rule 38 (expr -> value .)
+    DOTADD          reduce using rule 38 (expr -> value .)
+    NEQ             reduce using rule 38 (expr -> value .)
+    EQ              reduce using rule 38 (expr -> value .)
+    GTE             reduce using rule 38 (expr -> value .)
+    LTE             reduce using rule 38 (expr -> value .)
+    GT              reduce using rule 38 (expr -> value .)
+    LT              reduce using rule 38 (expr -> value .)
+    DIV             reduce using rule 38 (expr -> value .)
+    MUL             reduce using rule 38 (expr -> value .)
+    SUB             reduce using rule 38 (expr -> value .)
+    ADD             reduce using rule 38 (expr -> value .)
+    )               reduce using rule 38 (expr -> value .)
+
+
+state 33
+
+    (68) matrix_ref -> ID . [ string_of_num ]
+    (64) matrix_transpose -> ID . '
+    (24) value -> ID .
+    (52) id_ref -> ID .
+    [               shift and go to state 54
+    '               shift and go to state 73
+    ;               reduce using rule 24 (value -> ID .)
+    DOTDIV          reduce using rule 24 (value -> ID .)
+    DOTMUL          reduce using rule 24 (value -> ID .)
+    DOTSUB          reduce using rule 24 (value -> ID .)
+    DOTADD          reduce using rule 24 (value -> ID .)
+    NEQ             reduce using rule 24 (value -> ID .)
+    EQ              reduce using rule 24 (value -> ID .)
+    GTE             reduce using rule 24 (value -> ID .)
+    LTE             reduce using rule 24 (value -> ID .)
+    GT              reduce using rule 24 (value -> ID .)
+    LT              reduce using rule 24 (value -> ID .)
+    DIV             reduce using rule 24 (value -> ID .)
+    MUL             reduce using rule 24 (value -> ID .)
+    SUB             reduce using rule 24 (value -> ID .)
+    ADD             reduce using rule 24 (value -> ID .)
+    )               reduce using rule 24 (value -> ID .)
+    DIVASSIGN       reduce using rule 52 (id_ref -> ID .)
+    MULASSIGN       reduce using rule 52 (id_ref -> ID .)
+    SUBASSIGN       reduce using rule 52 (id_ref -> ID .)
+    ADDASSIGN       reduce using rule 52 (id_ref -> ID .)
+    =               reduce using rule 52 (id_ref -> ID .)
+
+
+state 34
+
+    (69) matrix -> [ . matrix_rows ]
+    (70) matrix -> [ . ]
+    (71) matrix_rows -> . matrix_rows , matrix_row
+    (72) matrix_rows -> . matrix_row
+    (73) matrix_row -> . [ string_of_num ]
+    (74) matrix_row -> . [ ]
+    ]               shift and go to state 76
+    [               shift and go to state 74
+
+    matrix_rows                    shift and go to state 75
+    matrix_row                     shift and go to state 77
+
+state 35
+
+    (65) matrix_funcs -> EYE . ( INTNUM )
+    (               shift and go to state 78
+
+
+state 36
+
+    (26) value -> INTNUM .
+    ;               reduce using rule 26 (value -> INTNUM .)
+    DOTDIV          reduce using rule 26 (value -> INTNUM .)
+    DOTMUL          reduce using rule 26 (value -> INTNUM .)
+    DOTSUB          reduce using rule 26 (value -> INTNUM .)
+    DOTADD          reduce using rule 26 (value -> INTNUM .)
+    NEQ             reduce using rule 26 (value -> INTNUM .)
+    EQ              reduce using rule 26 (value -> INTNUM .)
+    GTE             reduce using rule 26 (value -> INTNUM .)
+    LTE             reduce using rule 26 (value -> INTNUM .)
+    GT              reduce using rule 26 (value -> INTNUM .)
+    LT              reduce using rule 26 (value -> INTNUM .)
+    DIV             reduce using rule 26 (value -> INTNUM .)
+    MUL             reduce using rule 26 (value -> INTNUM .)
+    SUB             reduce using rule 26 (value -> INTNUM .)
+    ADD             reduce using rule 26 (value -> INTNUM .)
+    ,               reduce using rule 26 (value -> INTNUM .)
+    )               reduce using rule 26 (value -> INTNUM .)
+
+
+state 37
+
+    (66) matrix_funcs -> ONES . ( INTNUM )
+    (               shift and go to state 79
+
+
+state 38
+
+    (67) matrix_funcs -> ZEROS . ( INTNUM )
+    (               shift and go to state 80
+
+
+state 39
+
+    (63) matrix_transpose -> matrix . '
+    '               shift and go to state 81
+
+
+state 40
+
+    (27) inv_num -> SUB . FLOAT
+    (28) inv_num -> SUB . INTNUM
+    (29) inv_num -> SUB . ID
+    FLOAT           shift and go to state 82
+    INTNUM          shift and go to state 83
+    ID              shift and go to state 84
+
+
+state 41
+
+    (25) value -> FLOAT .
+    ;               reduce using rule 25 (value -> FLOAT .)
+    DOTDIV          reduce using rule 25 (value -> FLOAT .)
+    DOTMUL          reduce using rule 25 (value -> FLOAT .)
+    DOTSUB          reduce using rule 25 (value -> FLOAT .)
+    DOTADD          reduce using rule 25 (value -> FLOAT .)
+    NEQ             reduce using rule 25 (value -> FLOAT .)
+    EQ              reduce using rule 25 (value -> FLOAT .)
+    GTE             reduce using rule 25 (value -> FLOAT .)
+    LTE             reduce using rule 25 (value -> FLOAT .)
+    GT              reduce using rule 25 (value -> FLOAT .)
+    LT              reduce using rule 25 (value -> FLOAT .)
+    DIV             reduce using rule 25 (value -> FLOAT .)
+    MUL             reduce using rule 25 (value -> FLOAT .)
+    SUB             reduce using rule 25 (value -> FLOAT .)
+    ADD             reduce using rule 25 (value -> FLOAT .)
+    ,               reduce using rule 25 (value -> FLOAT .)
+    )               reduce using rule 25 (value -> FLOAT .)
+
+
+state 42
+
+    (23) value -> STRING .
+    ;               reduce using rule 23 (value -> STRING .)
+    DOTDIV          reduce using rule 23 (value -> STRING .)
+    DOTMUL          reduce using rule 23 (value -> STRING .)
+    DOTSUB          reduce using rule 23 (value -> STRING .)
+    DOTADD          reduce using rule 23 (value -> STRING .)
+    NEQ             reduce using rule 23 (value -> STRING .)
+    EQ              reduce using rule 23 (value -> STRING .)
+    GTE             reduce using rule 23 (value -> STRING .)
+    LTE             reduce using rule 23 (value -> STRING .)
+    GT              reduce using rule 23 (value -> STRING .)
+    LT              reduce using rule 23 (value -> STRING .)
+    DIV             reduce using rule 23 (value -> STRING .)
+    MUL             reduce using rule 23 (value -> STRING .)
+    SUB             reduce using rule 23 (value -> STRING .)
+    ADD             reduce using rule 23 (value -> STRING .)
+    ,               reduce using rule 23 (value -> STRING .)
+    )               reduce using rule 23 (value -> STRING .)
+
+
+state 43
+
+    (4) stmt -> CONTINUE ; .
+    {               reduce using rule 4 (stmt -> CONTINUE ; .)
+    RETURN          reduce using rule 4 (stmt -> CONTINUE ; .)
+    CONTINUE        reduce using rule 4 (stmt -> CONTINUE ; .)
+    BREAK           reduce using rule 4 (stmt -> CONTINUE ; .)
+    ;               reduce using rule 4 (stmt -> CONTINUE ; .)
+    PRINT           reduce using rule 4 (stmt -> CONTINUE ; .)
+    FOR             reduce using rule 4 (stmt -> CONTINUE ; .)
+    WHILE           reduce using rule 4 (stmt -> CONTINUE ; .)
+    IF              reduce using rule 4 (stmt -> CONTINUE ; .)
+    ID              reduce using rule 4 (stmt -> CONTINUE ; .)
+    $end            reduce using rule 4 (stmt -> CONTINUE ; .)
+    }               reduce using rule 4 (stmt -> CONTINUE ; .)
+    ELSE            reduce using rule 4 (stmt -> CONTINUE ; .)
+
+
+state 44
+
+    (5) stmt -> BREAK ; .
+    {               reduce using rule 5 (stmt -> BREAK ; .)
+    RETURN          reduce using rule 5 (stmt -> BREAK ; .)
+    CONTINUE        reduce using rule 5 (stmt -> BREAK ; .)
+    BREAK           reduce using rule 5 (stmt -> BREAK ; .)
+    ;               reduce using rule 5 (stmt -> BREAK ; .)
+    PRINT           reduce using rule 5 (stmt -> BREAK ; .)
+    FOR             reduce using rule 5 (stmt -> BREAK ; .)
+    WHILE           reduce using rule 5 (stmt -> BREAK ; .)
+    IF              reduce using rule 5 (stmt -> BREAK ; .)
+    ID              reduce using rule 5 (stmt -> BREAK ; .)
+    $end            reduce using rule 5 (stmt -> BREAK ; .)
+    }               reduce using rule 5 (stmt -> BREAK ; .)
+    ELSE            reduce using rule 5 (stmt -> BREAK ; .)
+
+
+state 45
+
+    (20) print_stmt -> PRINT print_rek . ;
+    (22) print_rek -> print_rek . , value
+    ;               shift and go to state 85
+    ,               shift and go to state 86
+
+
+state 46
+
+    (21) print_rek -> value .
+    ;               reduce using rule 21 (print_rek -> value .)
+    ,               reduce using rule 21 (print_rek -> value .)
+
+
+state 47
+
+    (24) value -> ID .
+    ;               reduce using rule 24 (value -> ID .)
+    ,               reduce using rule 24 (value -> ID .)
+
+
+state 48
+
+    (45) assign_expr -> id_ref DIVASSIGN . expr ;
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+    [               shift and go to state 34
+
+    id_ref                         shift and go to state 15
+    expr                           shift and go to state 87
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    relation_expr                  shift and go to state 28
+    assign_expr                    shift and go to state 29
+    bin_expr                       shift and go to state 30
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+    matrix                         shift and go to state 39
+
+state 49
+
+    (46) assign_expr -> id_ref MULASSIGN . expr ;
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+    [               shift and go to state 34
+
+    id_ref                         shift and go to state 15
+    expr                           shift and go to state 88
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    relation_expr                  shift and go to state 28
+    assign_expr                    shift and go to state 29
+    bin_expr                       shift and go to state 30
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+    matrix                         shift and go to state 39
+
+state 50
+
+    (47) assign_expr -> id_ref SUBASSIGN . expr ;
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+    [               shift and go to state 34
+
+    id_ref                         shift and go to state 15
+    expr                           shift and go to state 89
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    relation_expr                  shift and go to state 28
+    assign_expr                    shift and go to state 29
+    bin_expr                       shift and go to state 30
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+    matrix                         shift and go to state 39
+
+state 51
+
+    (48) assign_expr -> id_ref ADDASSIGN . expr ;
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+    [               shift and go to state 34
+
+    id_ref                         shift and go to state 15
+    expr                           shift and go to state 90
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    relation_expr                  shift and go to state 28
+    assign_expr                    shift and go to state 29
+    bin_expr                       shift and go to state 30
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+    matrix                         shift and go to state 39
+
+state 52
+
+    (49) assign_expr -> id_ref = . matrix ;
+    (50) assign_expr -> id_ref = . expr ;
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    [               shift and go to state 34
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+
+    id_ref                         shift and go to state 15
+    matrix                         shift and go to state 91
+    expr                           shift and go to state 92
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    relation_expr                  shift and go to state 28
+    assign_expr                    shift and go to state 29
+    bin_expr                       shift and go to state 30
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+
+state 53
+
+    (15) for_stmt -> FOR ID . = id_int : id_int stmt_braces
+    =               shift and go to state 93
+
+
+state 54
+
+    (68) matrix_ref -> ID [ . string_of_num ]
+    (75) string_of_num -> . string_of_num , INTNUM
+    (76) string_of_num -> . INTNUM
+    INTNUM          shift and go to state 95
+
+    string_of_num                  shift and go to state 94
+
+state 55
+
+    (14) while_stmt -> WHILE ( . bool_expr ) stmt_braces
+    (39) bool_expr -> . relation_expr
+    (40) bool_expr -> . bin_expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+    [               shift and go to state 34
+
+    bool_expr                      shift and go to state 96
+    relation_expr                  shift and go to state 97
+    bin_expr                       shift and go to state 98
+    expr                           shift and go to state 99
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    assign_expr                    shift and go to state 29
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+    matrix                         shift and go to state 39
+    id_ref                         shift and go to state 15
+
+state 56
+
+    (12) if_stmt -> IF ( . bool_expr ) stmt_braces
+    (13) if_stmt -> IF ( . bool_expr ) stmt_braces ELSE stmt_braces
+    (39) bool_expr -> . relation_expr
+    (40) bool_expr -> . bin_expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+    [               shift and go to state 34
+
+    bool_expr                      shift and go to state 100
+    relation_expr                  shift and go to state 97
+    bin_expr                       shift and go to state 98
+    expr                           shift and go to state 99
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    assign_expr                    shift and go to state 29
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+    matrix                         shift and go to state 39
+    id_ref                         shift and go to state 15
+
+state 57
+
+    (19) stmt_braces -> { statements } .
+    {               reduce using rule 19 (stmt_braces -> { statements } .)
+    RETURN          reduce using rule 19 (stmt_braces -> { statements } .)
+    CONTINUE        reduce using rule 19 (stmt_braces -> { statements } .)
+    BREAK           reduce using rule 19 (stmt_braces -> { statements } .)
+    ;               reduce using rule 19 (stmt_braces -> { statements } .)
+    PRINT           reduce using rule 19 (stmt_braces -> { statements } .)
+    FOR             reduce using rule 19 (stmt_braces -> { statements } .)
+    WHILE           reduce using rule 19 (stmt_braces -> { statements } .)
+    IF              reduce using rule 19 (stmt_braces -> { statements } .)
+    ID              reduce using rule 19 (stmt_braces -> { statements } .)
+    $end            reduce using rule 19 (stmt_braces -> { statements } .)
+    }               reduce using rule 19 (stmt_braces -> { statements } .)
+    ELSE            reduce using rule 19 (stmt_braces -> { statements } .)
+
+
+state 58
+
+    (3) stmt -> RETURN expr ; .
+    {               reduce using rule 3 (stmt -> RETURN expr ; .)
+    RETURN          reduce using rule 3 (stmt -> RETURN expr ; .)
+    CONTINUE        reduce using rule 3 (stmt -> RETURN expr ; .)
+    BREAK           reduce using rule 3 (stmt -> RETURN expr ; .)
+    ;               reduce using rule 3 (stmt -> RETURN expr ; .)
+    PRINT           reduce using rule 3 (stmt -> RETURN expr ; .)
+    FOR             reduce using rule 3 (stmt -> RETURN expr ; .)
+    WHILE           reduce using rule 3 (stmt -> RETURN expr ; .)
+    IF              reduce using rule 3 (stmt -> RETURN expr ; .)
+    ID              reduce using rule 3 (stmt -> RETURN expr ; .)
+    $end            reduce using rule 3 (stmt -> RETURN expr ; .)
+    }               reduce using rule 3 (stmt -> RETURN expr ; .)
+    ELSE            reduce using rule 3 (stmt -> RETURN expr ; .)
+
+
+state 59
+
+    (59) matrix_bin_expr -> expr DOTDIV . expr
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+    [               shift and go to state 34
+
+    expr                           shift and go to state 101
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    relation_expr                  shift and go to state 28
+    assign_expr                    shift and go to state 29
+    bin_expr                       shift and go to state 30
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+    matrix                         shift and go to state 39
+    id_ref                         shift and go to state 15
+
+state 60
+
+    (60) matrix_bin_expr -> expr DOTMUL . expr
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+    [               shift and go to state 34
+
+    expr                           shift and go to state 102
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    relation_expr                  shift and go to state 28
+    assign_expr                    shift and go to state 29
+    bin_expr                       shift and go to state 30
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+    matrix                         shift and go to state 39
+    id_ref                         shift and go to state 15
+
+state 61
+
+    (61) matrix_bin_expr -> expr DOTSUB . expr
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+    [               shift and go to state 34
+
+    expr                           shift and go to state 103
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    relation_expr                  shift and go to state 28
+    assign_expr                    shift and go to state 29
+    bin_expr                       shift and go to state 30
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+    matrix                         shift and go to state 39
+    id_ref                         shift and go to state 15
+
+state 62
+
+    (62) matrix_bin_expr -> expr DOTADD . expr
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+    [               shift and go to state 34
+
+    expr                           shift and go to state 104
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    relation_expr                  shift and go to state 28
+    assign_expr                    shift and go to state 29
+    bin_expr                       shift and go to state 30
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+    matrix                         shift and go to state 39
+    id_ref                         shift and go to state 15
+
+state 63
+
+    (53) relation_expr -> expr NEQ . expr
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+    [               shift and go to state 34
+
+    expr                           shift and go to state 105
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    relation_expr                  shift and go to state 28
+    assign_expr                    shift and go to state 29
+    bin_expr                       shift and go to state 30
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+    matrix                         shift and go to state 39
+    id_ref                         shift and go to state 15
+
+state 64
+
+    (54) relation_expr -> expr EQ . expr
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+    [               shift and go to state 34
+
+    expr                           shift and go to state 106
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    relation_expr                  shift and go to state 28
+    assign_expr                    shift and go to state 29
+    bin_expr                       shift and go to state 30
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+    matrix                         shift and go to state 39
+    id_ref                         shift and go to state 15
+
+state 65
+
+    (55) relation_expr -> expr GTE . expr
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+    [               shift and go to state 34
+
+    expr                           shift and go to state 107
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    relation_expr                  shift and go to state 28
+    assign_expr                    shift and go to state 29
+    bin_expr                       shift and go to state 30
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+    matrix                         shift and go to state 39
+    id_ref                         shift and go to state 15
+
+state 66
+
+    (56) relation_expr -> expr LTE . expr
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+    [               shift and go to state 34
+
+    expr                           shift and go to state 108
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    relation_expr                  shift and go to state 28
+    assign_expr                    shift and go to state 29
+    bin_expr                       shift and go to state 30
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+    matrix                         shift and go to state 39
+    id_ref                         shift and go to state 15
+
+state 67
+
+    (57) relation_expr -> expr GT . expr
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+    [               shift and go to state 34
+
+    expr                           shift and go to state 109
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    relation_expr                  shift and go to state 28
+    assign_expr                    shift and go to state 29
+    bin_expr                       shift and go to state 30
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+    matrix                         shift and go to state 39
+    id_ref                         shift and go to state 15
+
+state 68
+
+    (58) relation_expr -> expr LT . expr
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+    [               shift and go to state 34
+
+    expr                           shift and go to state 110
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    relation_expr                  shift and go to state 28
+    assign_expr                    shift and go to state 29
+    bin_expr                       shift and go to state 30
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+    matrix                         shift and go to state 39
+    id_ref                         shift and go to state 15
+
+state 69
+
+    (41) bin_expr -> expr DIV . expr
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+    [               shift and go to state 34
+
+    expr                           shift and go to state 111
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    relation_expr                  shift and go to state 28
+    assign_expr                    shift and go to state 29
+    bin_expr                       shift and go to state 30
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+    matrix                         shift and go to state 39
+    id_ref                         shift and go to state 15
+
+state 70
+
+    (42) bin_expr -> expr MUL . expr
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+    [               shift and go to state 34
+
+    expr                           shift and go to state 112
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    relation_expr                  shift and go to state 28
+    assign_expr                    shift and go to state 29
+    bin_expr                       shift and go to state 30
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+    matrix                         shift and go to state 39
+    id_ref                         shift and go to state 15
+
+state 71
+
+    (43) bin_expr -> expr SUB . expr
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+    [               shift and go to state 34
+
+    expr                           shift and go to state 113
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    relation_expr                  shift and go to state 28
+    assign_expr                    shift and go to state 29
+    bin_expr                       shift and go to state 30
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+    matrix                         shift and go to state 39
+    id_ref                         shift and go to state 15
+
+state 72
+
+    (44) bin_expr -> expr ADD . expr
+    (30) expr -> . matrix_ref
+    (31) expr -> . matrix_funcs
+    (32) expr -> . matrix_transpose
+    (33) expr -> . matrix_bin_expr
+    (34) expr -> . relation_expr
+    (35) expr -> . assign_expr
+    (36) expr -> . bin_expr
+    (37) expr -> . inv_num
+    (38) expr -> . value
+    (68) matrix_ref -> . ID [ string_of_num ]
+    (65) matrix_funcs -> . EYE ( INTNUM )
+    (66) matrix_funcs -> . ONES ( INTNUM )
+    (67) matrix_funcs -> . ZEROS ( INTNUM )
+    (63) matrix_transpose -> . matrix '
+    (64) matrix_transpose -> . ID '
+    (59) matrix_bin_expr -> . expr DOTDIV expr
+    (60) matrix_bin_expr -> . expr DOTMUL expr
+    (61) matrix_bin_expr -> . expr DOTSUB expr
+    (62) matrix_bin_expr -> . expr DOTADD expr
+    (53) relation_expr -> . expr NEQ expr
+    (54) relation_expr -> . expr EQ expr
+    (55) relation_expr -> . expr GTE expr
+    (56) relation_expr -> . expr LTE expr
+    (57) relation_expr -> . expr GT expr
+    (58) relation_expr -> . expr LT expr
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (41) bin_expr -> . expr DIV expr
+    (42) bin_expr -> . expr MUL expr
+    (43) bin_expr -> . expr SUB expr
+    (44) bin_expr -> . expr ADD expr
+    (27) inv_num -> . SUB FLOAT
+    (28) inv_num -> . SUB INTNUM
+    (29) inv_num -> . SUB ID
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    (69) matrix -> . [ matrix_rows ]
+    (70) matrix -> . [ ]
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    ID              shift and go to state 33
+    EYE             shift and go to state 35
+    ONES            shift and go to state 37
+    ZEROS           shift and go to state 38
+    SUB             shift and go to state 40
+    STRING          shift and go to state 42
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+    [               shift and go to state 34
+
+    expr                           shift and go to state 114
+    matrix_ref                     shift and go to state 24
+    matrix_funcs                   shift and go to state 25
+    matrix_transpose               shift and go to state 26
+    matrix_bin_expr                shift and go to state 27
+    relation_expr                  shift and go to state 28
+    assign_expr                    shift and go to state 29
+    bin_expr                       shift and go to state 30
+    inv_num                        shift and go to state 31
+    value                          shift and go to state 32
+    matrix                         shift and go to state 39
+    id_ref                         shift and go to state 15
+
+state 73
+
+    (64) matrix_transpose -> ID ' .
+    ;               reduce using rule 64 (matrix_transpose -> ID ' .)
+    DOTDIV          reduce using rule 64 (matrix_transpose -> ID ' .)
+    DOTMUL          reduce using rule 64 (matrix_transpose -> ID ' .)
+    DOTSUB          reduce using rule 64 (matrix_transpose -> ID ' .)
+    DOTADD          reduce using rule 64 (matrix_transpose -> ID ' .)
+    NEQ             reduce using rule 64 (matrix_transpose -> ID ' .)
+    EQ              reduce using rule 64 (matrix_transpose -> ID ' .)
+    GTE             reduce using rule 64 (matrix_transpose -> ID ' .)
+    LTE             reduce using rule 64 (matrix_transpose -> ID ' .)
+    GT              reduce using rule 64 (matrix_transpose -> ID ' .)
+    LT              reduce using rule 64 (matrix_transpose -> ID ' .)
+    DIV             reduce using rule 64 (matrix_transpose -> ID ' .)
+    MUL             reduce using rule 64 (matrix_transpose -> ID ' .)
+    SUB             reduce using rule 64 (matrix_transpose -> ID ' .)
+    ADD             reduce using rule 64 (matrix_transpose -> ID ' .)
+    )               reduce using rule 64 (matrix_transpose -> ID ' .)
+
+
+state 74
+
+    (73) matrix_row -> [ . string_of_num ]
+    (74) matrix_row -> [ . ]
+    (75) string_of_num -> . string_of_num , INTNUM
+    (76) string_of_num -> . INTNUM
+    ]               shift and go to state 116
+    INTNUM          shift and go to state 95
+
+    string_of_num                  shift and go to state 115
+
+state 75
+
+    (69) matrix -> [ matrix_rows . ]
+    (71) matrix_rows -> matrix_rows . , matrix_row
+    ]               shift and go to state 117
+    ,               shift and go to state 118
+
+
+state 76
+
+    (70) matrix -> [ ] .
+    '               reduce using rule 70 (matrix -> [ ] .)
+    ;               reduce using rule 70 (matrix -> [ ] .)
+
+
+state 77
+
+    (72) matrix_rows -> matrix_row .
+    ]               reduce using rule 72 (matrix_rows -> matrix_row .)
+    ,               reduce using rule 72 (matrix_rows -> matrix_row .)
+
+
+state 78
+
+    (65) matrix_funcs -> EYE ( . INTNUM )
+    INTNUM          shift and go to state 119
+
+
+state 79
+
+    (66) matrix_funcs -> ONES ( . INTNUM )
+    INTNUM          shift and go to state 120
+
+
+state 80
+
+    (67) matrix_funcs -> ZEROS ( . INTNUM )
+    INTNUM          shift and go to state 121
+
+
+state 81
+
+    (63) matrix_transpose -> matrix ' .
+    ;               reduce using rule 63 (matrix_transpose -> matrix ' .)
+    DOTDIV          reduce using rule 63 (matrix_transpose -> matrix ' .)
+    DOTMUL          reduce using rule 63 (matrix_transpose -> matrix ' .)
+    DOTSUB          reduce using rule 63 (matrix_transpose -> matrix ' .)
+    DOTADD          reduce using rule 63 (matrix_transpose -> matrix ' .)
+    NEQ             reduce using rule 63 (matrix_transpose -> matrix ' .)
+    EQ              reduce using rule 63 (matrix_transpose -> matrix ' .)
+    GTE             reduce using rule 63 (matrix_transpose -> matrix ' .)
+    LTE             reduce using rule 63 (matrix_transpose -> matrix ' .)
+    GT              reduce using rule 63 (matrix_transpose -> matrix ' .)
+    LT              reduce using rule 63 (matrix_transpose -> matrix ' .)
+    DIV             reduce using rule 63 (matrix_transpose -> matrix ' .)
+    MUL             reduce using rule 63 (matrix_transpose -> matrix ' .)
+    SUB             reduce using rule 63 (matrix_transpose -> matrix ' .)
+    ADD             reduce using rule 63 (matrix_transpose -> matrix ' .)
+    )               reduce using rule 63 (matrix_transpose -> matrix ' .)
+
+
+state 82
+
+    (27) inv_num -> SUB FLOAT .
+    ;               reduce using rule 27 (inv_num -> SUB FLOAT .)
+    DOTDIV          reduce using rule 27 (inv_num -> SUB FLOAT .)
+    DOTMUL          reduce using rule 27 (inv_num -> SUB FLOAT .)
+    DOTSUB          reduce using rule 27 (inv_num -> SUB FLOAT .)
+    DOTADD          reduce using rule 27 (inv_num -> SUB FLOAT .)
+    NEQ             reduce using rule 27 (inv_num -> SUB FLOAT .)
+    EQ              reduce using rule 27 (inv_num -> SUB FLOAT .)
+    GTE             reduce using rule 27 (inv_num -> SUB FLOAT .)
+    LTE             reduce using rule 27 (inv_num -> SUB FLOAT .)
+    GT              reduce using rule 27 (inv_num -> SUB FLOAT .)
+    LT              reduce using rule 27 (inv_num -> SUB FLOAT .)
+    DIV             reduce using rule 27 (inv_num -> SUB FLOAT .)
+    MUL             reduce using rule 27 (inv_num -> SUB FLOAT .)
+    SUB             reduce using rule 27 (inv_num -> SUB FLOAT .)
+    ADD             reduce using rule 27 (inv_num -> SUB FLOAT .)
+    )               reduce using rule 27 (inv_num -> SUB FLOAT .)
+
+
+state 83
+
+    (28) inv_num -> SUB INTNUM .
+    ;               reduce using rule 28 (inv_num -> SUB INTNUM .)
+    DOTDIV          reduce using rule 28 (inv_num -> SUB INTNUM .)
+    DOTMUL          reduce using rule 28 (inv_num -> SUB INTNUM .)
+    DOTSUB          reduce using rule 28 (inv_num -> SUB INTNUM .)
+    DOTADD          reduce using rule 28 (inv_num -> SUB INTNUM .)
+    NEQ             reduce using rule 28 (inv_num -> SUB INTNUM .)
+    EQ              reduce using rule 28 (inv_num -> SUB INTNUM .)
+    GTE             reduce using rule 28 (inv_num -> SUB INTNUM .)
+    LTE             reduce using rule 28 (inv_num -> SUB INTNUM .)
+    GT              reduce using rule 28 (inv_num -> SUB INTNUM .)
+    LT              reduce using rule 28 (inv_num -> SUB INTNUM .)
+    DIV             reduce using rule 28 (inv_num -> SUB INTNUM .)
+    MUL             reduce using rule 28 (inv_num -> SUB INTNUM .)
+    SUB             reduce using rule 28 (inv_num -> SUB INTNUM .)
+    ADD             reduce using rule 28 (inv_num -> SUB INTNUM .)
+    )               reduce using rule 28 (inv_num -> SUB INTNUM .)
+
+
+state 84
+
+    (29) inv_num -> SUB ID .
+    ;               reduce using rule 29 (inv_num -> SUB ID .)
+    DOTDIV          reduce using rule 29 (inv_num -> SUB ID .)
+    DOTMUL          reduce using rule 29 (inv_num -> SUB ID .)
+    DOTSUB          reduce using rule 29 (inv_num -> SUB ID .)
+    DOTADD          reduce using rule 29 (inv_num -> SUB ID .)
+    NEQ             reduce using rule 29 (inv_num -> SUB ID .)
+    EQ              reduce using rule 29 (inv_num -> SUB ID .)
+    GTE             reduce using rule 29 (inv_num -> SUB ID .)
+    LTE             reduce using rule 29 (inv_num -> SUB ID .)
+    GT              reduce using rule 29 (inv_num -> SUB ID .)
+    LT              reduce using rule 29 (inv_num -> SUB ID .)
+    DIV             reduce using rule 29 (inv_num -> SUB ID .)
+    MUL             reduce using rule 29 (inv_num -> SUB ID .)
+    SUB             reduce using rule 29 (inv_num -> SUB ID .)
+    ADD             reduce using rule 29 (inv_num -> SUB ID .)
+    )               reduce using rule 29 (inv_num -> SUB ID .)
+
+
+state 85
+
+    (20) print_stmt -> PRINT print_rek ; .
+    {               reduce using rule 20 (print_stmt -> PRINT print_rek ; .)
+    RETURN          reduce using rule 20 (print_stmt -> PRINT print_rek ; .)
+    CONTINUE        reduce using rule 20 (print_stmt -> PRINT print_rek ; .)
+    BREAK           reduce using rule 20 (print_stmt -> PRINT print_rek ; .)
+    ;               reduce using rule 20 (print_stmt -> PRINT print_rek ; .)
+    PRINT           reduce using rule 20 (print_stmt -> PRINT print_rek ; .)
+    FOR             reduce using rule 20 (print_stmt -> PRINT print_rek ; .)
+    WHILE           reduce using rule 20 (print_stmt -> PRINT print_rek ; .)
+    IF              reduce using rule 20 (print_stmt -> PRINT print_rek ; .)
+    ID              reduce using rule 20 (print_stmt -> PRINT print_rek ; .)
+    $end            reduce using rule 20 (print_stmt -> PRINT print_rek ; .)
+    }               reduce using rule 20 (print_stmt -> PRINT print_rek ; .)
+    ELSE            reduce using rule 20 (print_stmt -> PRINT print_rek ; .)
+
+
+state 86
+
+    (22) print_rek -> print_rek , . value
+    (23) value -> . STRING
+    (24) value -> . ID
+    (25) value -> . FLOAT
+    (26) value -> . INTNUM
+    STRING          shift and go to state 42
+    ID              shift and go to state 47
+    FLOAT           shift and go to state 41
+    INTNUM          shift and go to state 36
+
+    value                          shift and go to state 122
+
+state 87
+
+    (45) assign_expr -> id_ref DIVASSIGN expr . ;
+    (59) matrix_bin_expr -> expr . DOTDIV expr
+    (60) matrix_bin_expr -> expr . DOTMUL expr
+    (61) matrix_bin_expr -> expr . DOTSUB expr
+    (62) matrix_bin_expr -> expr . DOTADD expr
+    (53) relation_expr -> expr . NEQ expr
+    (54) relation_expr -> expr . EQ expr
+    (55) relation_expr -> expr . GTE expr
+    (56) relation_expr -> expr . LTE expr
+    (57) relation_expr -> expr . GT expr
+    (58) relation_expr -> expr . LT expr
+    (41) bin_expr -> expr . DIV expr
+    (42) bin_expr -> expr . MUL expr
+    (43) bin_expr -> expr . SUB expr
+    (44) bin_expr -> expr . ADD expr
+    ;               shift and go to state 123
+    DOTDIV          shift and go to state 59
+    DOTMUL          shift and go to state 60
+    DOTSUB          shift and go to state 61
+    DOTADD          shift and go to state 62
+    NEQ             shift and go to state 63
+    EQ              shift and go to state 64
+    GTE             shift and go to state 65
+    LTE             shift and go to state 66
+    GT              shift and go to state 67
+    LT              shift and go to state 68
+    DIV             shift and go to state 69
+    MUL             shift and go to state 70
+    SUB             shift and go to state 71
+    ADD             shift and go to state 72
+
+
+state 88
+
+    (46) assign_expr -> id_ref MULASSIGN expr . ;
+    (59) matrix_bin_expr -> expr . DOTDIV expr
+    (60) matrix_bin_expr -> expr . DOTMUL expr
+    (61) matrix_bin_expr -> expr . DOTSUB expr
+    (62) matrix_bin_expr -> expr . DOTADD expr
+    (53) relation_expr -> expr . NEQ expr
+    (54) relation_expr -> expr . EQ expr
+    (55) relation_expr -> expr . GTE expr
+    (56) relation_expr -> expr . LTE expr
+    (57) relation_expr -> expr . GT expr
+    (58) relation_expr -> expr . LT expr
+    (41) bin_expr -> expr . DIV expr
+    (42) bin_expr -> expr . MUL expr
+    (43) bin_expr -> expr . SUB expr
+    (44) bin_expr -> expr . ADD expr
+    ;               shift and go to state 124
+    DOTDIV          shift and go to state 59
+    DOTMUL          shift and go to state 60
+    DOTSUB          shift and go to state 61
+    DOTADD          shift and go to state 62
+    NEQ             shift and go to state 63
+    EQ              shift and go to state 64
+    GTE             shift and go to state 65
+    LTE             shift and go to state 66
+    GT              shift and go to state 67
+    LT              shift and go to state 68
+    DIV             shift and go to state 69
+    MUL             shift and go to state 70
+    SUB             shift and go to state 71
+    ADD             shift and go to state 72
+
+
+state 89
+
+    (47) assign_expr -> id_ref SUBASSIGN expr . ;
+    (59) matrix_bin_expr -> expr . DOTDIV expr
+    (60) matrix_bin_expr -> expr . DOTMUL expr
+    (61) matrix_bin_expr -> expr . DOTSUB expr
+    (62) matrix_bin_expr -> expr . DOTADD expr
+    (53) relation_expr -> expr . NEQ expr
+    (54) relation_expr -> expr . EQ expr
+    (55) relation_expr -> expr . GTE expr
+    (56) relation_expr -> expr . LTE expr
+    (57) relation_expr -> expr . GT expr
+    (58) relation_expr -> expr . LT expr
+    (41) bin_expr -> expr . DIV expr
+    (42) bin_expr -> expr . MUL expr
+    (43) bin_expr -> expr . SUB expr
+    (44) bin_expr -> expr . ADD expr
+    ;               shift and go to state 125
+    DOTDIV          shift and go to state 59
+    DOTMUL          shift and go to state 60
+    DOTSUB          shift and go to state 61
+    DOTADD          shift and go to state 62
+    NEQ             shift and go to state 63
+    EQ              shift and go to state 64
+    GTE             shift and go to state 65
+    LTE             shift and go to state 66
+    GT              shift and go to state 67
+    LT              shift and go to state 68
+    DIV             shift and go to state 69
+    MUL             shift and go to state 70
+    SUB             shift and go to state 71
+    ADD             shift and go to state 72
+
+
+state 90
+
+    (48) assign_expr -> id_ref ADDASSIGN expr . ;
+    (59) matrix_bin_expr -> expr . DOTDIV expr
+    (60) matrix_bin_expr -> expr . DOTMUL expr
+    (61) matrix_bin_expr -> expr . DOTSUB expr
+    (62) matrix_bin_expr -> expr . DOTADD expr
+    (53) relation_expr -> expr . NEQ expr
+    (54) relation_expr -> expr . EQ expr
+    (55) relation_expr -> expr . GTE expr
+    (56) relation_expr -> expr . LTE expr
+    (57) relation_expr -> expr . GT expr
+    (58) relation_expr -> expr . LT expr
+    (41) bin_expr -> expr . DIV expr
+    (42) bin_expr -> expr . MUL expr
+    (43) bin_expr -> expr . SUB expr
+    (44) bin_expr -> expr . ADD expr
+    ;               shift and go to state 126
+    DOTDIV          shift and go to state 59
+    DOTMUL          shift and go to state 60
+    DOTSUB          shift and go to state 61
+    DOTADD          shift and go to state 62
+    NEQ             shift and go to state 63
+    EQ              shift and go to state 64
+    GTE             shift and go to state 65
+    LTE             shift and go to state 66
+    GT              shift and go to state 67
+    LT              shift and go to state 68
+    DIV             shift and go to state 69
+    MUL             shift and go to state 70
+    SUB             shift and go to state 71
+    ADD             shift and go to state 72
+
+
+state 91
+
+    (49) assign_expr -> id_ref = matrix . ;
+    (63) matrix_transpose -> matrix . '
+    ;               shift and go to state 127
+    '               shift and go to state 81
+
+
+state 92
+
+    (50) assign_expr -> id_ref = expr . ;
+    (59) matrix_bin_expr -> expr . DOTDIV expr
+    (60) matrix_bin_expr -> expr . DOTMUL expr
+    (61) matrix_bin_expr -> expr . DOTSUB expr
+    (62) matrix_bin_expr -> expr . DOTADD expr
+    (53) relation_expr -> expr . NEQ expr
+    (54) relation_expr -> expr . EQ expr
+    (55) relation_expr -> expr . GTE expr
+    (56) relation_expr -> expr . LTE expr
+    (57) relation_expr -> expr . GT expr
+    (58) relation_expr -> expr . LT expr
+    (41) bin_expr -> expr . DIV expr
+    (42) bin_expr -> expr . MUL expr
+    (43) bin_expr -> expr . SUB expr
+    (44) bin_expr -> expr . ADD expr
+    ;               shift and go to state 128
+    DOTDIV          shift and go to state 59
+    DOTMUL          shift and go to state 60
+    DOTSUB          shift and go to state 61
+    DOTADD          shift and go to state 62
+    NEQ             shift and go to state 63
+    EQ              shift and go to state 64
+    GTE             shift and go to state 65
+    LTE             shift and go to state 66
+    GT              shift and go to state 67
+    LT              shift and go to state 68
+    DIV             shift and go to state 69
+    MUL             shift and go to state 70
+    SUB             shift and go to state 71
+    ADD             shift and go to state 72
+
+
+state 93
+
+    (15) for_stmt -> FOR ID = . id_int : id_int stmt_braces
+    (16) id_int -> . INTNUM
+    (17) id_int -> . ID
+    INTNUM          shift and go to state 131
+    ID              shift and go to state 129
+
+    id_int                         shift and go to state 130
+
+state 94
+
+    (68) matrix_ref -> ID [ string_of_num . ]
+    (75) string_of_num -> string_of_num . , INTNUM
+    ]               shift and go to state 132
+    ,               shift and go to state 133
+
+
+state 95
+
+    (76) string_of_num -> INTNUM .
+    ]               reduce using rule 76 (string_of_num -> INTNUM .)
+    ,               reduce using rule 76 (string_of_num -> INTNUM .)
+
+
+state 96
+
+    (14) while_stmt -> WHILE ( bool_expr . ) stmt_braces
+    )               shift and go to state 134
+
+
+state 97
+
+    (39) bool_expr -> relation_expr .
+    (34) expr -> relation_expr .
+    )               reduce using rule 39 (bool_expr -> relation_expr .)
+    NEQ             reduce using rule 34 (expr -> relation_expr .)
+    EQ              reduce using rule 34 (expr -> relation_expr .)
+    GTE             reduce using rule 34 (expr -> relation_expr .)
+    LTE             reduce using rule 34 (expr -> relation_expr .)
+    GT              reduce using rule 34 (expr -> relation_expr .)
+    LT              reduce using rule 34 (expr -> relation_expr .)
+    DIV             reduce using rule 34 (expr -> relation_expr .)
+    MUL             reduce using rule 34 (expr -> relation_expr .)
+    SUB             reduce using rule 34 (expr -> relation_expr .)
+    ADD             reduce using rule 34 (expr -> relation_expr .)
+    DOTDIV          reduce using rule 34 (expr -> relation_expr .)
+    DOTMUL          reduce using rule 34 (expr -> relation_expr .)
+    DOTSUB          reduce using rule 34 (expr -> relation_expr .)
+    DOTADD          reduce using rule 34 (expr -> relation_expr .)
+
+
+state 98
+
+    (40) bool_expr -> bin_expr .
+    (36) expr -> bin_expr .
+    )               reduce using rule 40 (bool_expr -> bin_expr .)
+    NEQ             reduce using rule 36 (expr -> bin_expr .)
+    EQ              reduce using rule 36 (expr -> bin_expr .)
+    GTE             reduce using rule 36 (expr -> bin_expr .)
+    LTE             reduce using rule 36 (expr -> bin_expr .)
+    GT              reduce using rule 36 (expr -> bin_expr .)
+    LT              reduce using rule 36 (expr -> bin_expr .)
+    DIV             reduce using rule 36 (expr -> bin_expr .)
+    MUL             reduce using rule 36 (expr -> bin_expr .)
+    SUB             reduce using rule 36 (expr -> bin_expr .)
+    ADD             reduce using rule 36 (expr -> bin_expr .)
+    DOTDIV          reduce using rule 36 (expr -> bin_expr .)
+    DOTMUL          reduce using rule 36 (expr -> bin_expr .)
+    DOTSUB          reduce using rule 36 (expr -> bin_expr .)
+    DOTADD          reduce using rule 36 (expr -> bin_expr .)
+
+
+state 99
+
+    (53) relation_expr -> expr . NEQ expr
+    (54) relation_expr -> expr . EQ expr
+    (55) relation_expr -> expr . GTE expr
+    (56) relation_expr -> expr . LTE expr
+    (57) relation_expr -> expr . GT expr
+    (58) relation_expr -> expr . LT expr
+    (41) bin_expr -> expr . DIV expr
+    (42) bin_expr -> expr . MUL expr
+    (43) bin_expr -> expr . SUB expr
+    (44) bin_expr -> expr . ADD expr
+    (59) matrix_bin_expr -> expr . DOTDIV expr
+    (60) matrix_bin_expr -> expr . DOTMUL expr
+    (61) matrix_bin_expr -> expr . DOTSUB expr
+    (62) matrix_bin_expr -> expr . DOTADD expr
+    NEQ             shift and go to state 63
+    EQ              shift and go to state 64
+    GTE             shift and go to state 65
+    LTE             shift and go to state 66
+    GT              shift and go to state 67
+    LT              shift and go to state 68
+    DIV             shift and go to state 69
+    MUL             shift and go to state 70
+    SUB             shift and go to state 71
+    ADD             shift and go to state 72
+    DOTDIV          shift and go to state 59
+    DOTMUL          shift and go to state 60
+    DOTSUB          shift and go to state 61
+    DOTADD          shift and go to state 62
+
+
+state 100
+
+    (12) if_stmt -> IF ( bool_expr . ) stmt_braces
+    (13) if_stmt -> IF ( bool_expr . ) stmt_braces ELSE stmt_braces
+    )               shift and go to state 135
+
+
+state 101
+
+    (59) matrix_bin_expr -> expr DOTDIV expr .
+    (59) matrix_bin_expr -> expr . DOTDIV expr
+    (60) matrix_bin_expr -> expr . DOTMUL expr
+    (61) matrix_bin_expr -> expr . DOTSUB expr
+    (62) matrix_bin_expr -> expr . DOTADD expr
+    (53) relation_expr -> expr . NEQ expr
+    (54) relation_expr -> expr . EQ expr
+    (55) relation_expr -> expr . GTE expr
+    (56) relation_expr -> expr . LTE expr
+    (57) relation_expr -> expr . GT expr
+    (58) relation_expr -> expr . LT expr
+    (41) bin_expr -> expr . DIV expr
+    (42) bin_expr -> expr . MUL expr
+    (43) bin_expr -> expr . SUB expr
+    (44) bin_expr -> expr . ADD expr
+    ;               reduce using rule 59 (matrix_bin_expr -> expr DOTDIV expr .)
+    DOTDIV          reduce using rule 59 (matrix_bin_expr -> expr DOTDIV expr .)
+    DOTMUL          reduce using rule 59 (matrix_bin_expr -> expr DOTDIV expr .)
+    DOTSUB          reduce using rule 59 (matrix_bin_expr -> expr DOTDIV expr .)
+    DOTADD          reduce using rule 59 (matrix_bin_expr -> expr DOTDIV expr .)
+    NEQ             reduce using rule 59 (matrix_bin_expr -> expr DOTDIV expr .)
+    EQ              reduce using rule 59 (matrix_bin_expr -> expr DOTDIV expr .)
+    GTE             reduce using rule 59 (matrix_bin_expr -> expr DOTDIV expr .)
+    LTE             reduce using rule 59 (matrix_bin_expr -> expr DOTDIV expr .)
+    GT              reduce using rule 59 (matrix_bin_expr -> expr DOTDIV expr .)
+    LT              reduce using rule 59 (matrix_bin_expr -> expr DOTDIV expr .)
+    DIV             reduce using rule 59 (matrix_bin_expr -> expr DOTDIV expr .)
+    MUL             reduce using rule 59 (matrix_bin_expr -> expr DOTDIV expr .)
+    SUB             reduce using rule 59 (matrix_bin_expr -> expr DOTDIV expr .)
+    ADD             reduce using rule 59 (matrix_bin_expr -> expr DOTDIV expr .)
+    )               reduce using rule 59 (matrix_bin_expr -> expr DOTDIV expr .)
+
+
+state 102
+
+    (60) matrix_bin_expr -> expr DOTMUL expr .
+    (59) matrix_bin_expr -> expr . DOTDIV expr
+    (60) matrix_bin_expr -> expr . DOTMUL expr
+    (61) matrix_bin_expr -> expr . DOTSUB expr
+    (62) matrix_bin_expr -> expr . DOTADD expr
+    (53) relation_expr -> expr . NEQ expr
+    (54) relation_expr -> expr . EQ expr
+    (55) relation_expr -> expr . GTE expr
+    (56) relation_expr -> expr . LTE expr
+    (57) relation_expr -> expr . GT expr
+    (58) relation_expr -> expr . LT expr
+    (41) bin_expr -> expr . DIV expr
+    (42) bin_expr -> expr . MUL expr
+    (43) bin_expr -> expr . SUB expr
+    (44) bin_expr -> expr . ADD expr
+    ;               reduce using rule 60 (matrix_bin_expr -> expr DOTMUL expr .)
+    DOTDIV          reduce using rule 60 (matrix_bin_expr -> expr DOTMUL expr .)
+    DOTMUL          reduce using rule 60 (matrix_bin_expr -> expr DOTMUL expr .)
+    DOTSUB          reduce using rule 60 (matrix_bin_expr -> expr DOTMUL expr .)
+    DOTADD          reduce using rule 60 (matrix_bin_expr -> expr DOTMUL expr .)
+    NEQ             reduce using rule 60 (matrix_bin_expr -> expr DOTMUL expr .)
+    EQ              reduce using rule 60 (matrix_bin_expr -> expr DOTMUL expr .)
+    GTE             reduce using rule 60 (matrix_bin_expr -> expr DOTMUL expr .)
+    LTE             reduce using rule 60 (matrix_bin_expr -> expr DOTMUL expr .)
+    GT              reduce using rule 60 (matrix_bin_expr -> expr DOTMUL expr .)
+    LT              reduce using rule 60 (matrix_bin_expr -> expr DOTMUL expr .)
+    DIV             reduce using rule 60 (matrix_bin_expr -> expr DOTMUL expr .)
+    MUL             reduce using rule 60 (matrix_bin_expr -> expr DOTMUL expr .)
+    SUB             reduce using rule 60 (matrix_bin_expr -> expr DOTMUL expr .)
+    ADD             reduce using rule 60 (matrix_bin_expr -> expr DOTMUL expr .)
+    )               reduce using rule 60 (matrix_bin_expr -> expr DOTMUL expr .)
+
+
+state 103
+
+    (61) matrix_bin_expr -> expr DOTSUB expr .
+    (59) matrix_bin_expr -> expr . DOTDIV expr
+    (60) matrix_bin_expr -> expr . DOTMUL expr
+    (61) matrix_bin_expr -> expr . DOTSUB expr
+    (62) matrix_bin_expr -> expr . DOTADD expr
+    (53) relation_expr -> expr . NEQ expr
+    (54) relation_expr -> expr . EQ expr
+    (55) relation_expr -> expr . GTE expr
+    (56) relation_expr -> expr . LTE expr
+    (57) relation_expr -> expr . GT expr
+    (58) relation_expr -> expr . LT expr
+    (41) bin_expr -> expr . DIV expr
+    (42) bin_expr -> expr . MUL expr
+    (43) bin_expr -> expr . SUB expr
+    (44) bin_expr -> expr . ADD expr
+    ;               reduce using rule 61 (matrix_bin_expr -> expr DOTSUB expr .)
+    DOTSUB          reduce using rule 61 (matrix_bin_expr -> expr DOTSUB expr .)
+    DOTADD          reduce using rule 61 (matrix_bin_expr -> expr DOTSUB expr .)
+    NEQ             reduce using rule 61 (matrix_bin_expr -> expr DOTSUB expr .)
+    EQ              reduce using rule 61 (matrix_bin_expr -> expr DOTSUB expr .)
+    GTE             reduce using rule 61 (matrix_bin_expr -> expr DOTSUB expr .)
+    LTE             reduce using rule 61 (matrix_bin_expr -> expr DOTSUB expr .)
+    GT              reduce using rule 61 (matrix_bin_expr -> expr DOTSUB expr .)
+    LT              reduce using rule 61 (matrix_bin_expr -> expr DOTSUB expr .)
+    DIV             reduce using rule 61 (matrix_bin_expr -> expr DOTSUB expr .)
+    MUL             reduce using rule 61 (matrix_bin_expr -> expr DOTSUB expr .)
+    SUB             reduce using rule 61 (matrix_bin_expr -> expr DOTSUB expr .)
+    ADD             reduce using rule 61 (matrix_bin_expr -> expr DOTSUB expr .)
+    )               reduce using rule 61 (matrix_bin_expr -> expr DOTSUB expr .)
+    DOTDIV          shift and go to state 59
+    DOTMUL          shift and go to state 60
+
+
+state 104
+
+    (62) matrix_bin_expr -> expr DOTADD expr .
+    (59) matrix_bin_expr -> expr . DOTDIV expr
+    (60) matrix_bin_expr -> expr . DOTMUL expr
+    (61) matrix_bin_expr -> expr . DOTSUB expr
+    (62) matrix_bin_expr -> expr . DOTADD expr
+    (53) relation_expr -> expr . NEQ expr
+    (54) relation_expr -> expr . EQ expr
+    (55) relation_expr -> expr . GTE expr
+    (56) relation_expr -> expr . LTE expr
+    (57) relation_expr -> expr . GT expr
+    (58) relation_expr -> expr . LT expr
+    (41) bin_expr -> expr . DIV expr
+    (42) bin_expr -> expr . MUL expr
+    (43) bin_expr -> expr . SUB expr
+    (44) bin_expr -> expr . ADD expr
+    ;               reduce using rule 62 (matrix_bin_expr -> expr DOTADD expr .)
+    DOTSUB          reduce using rule 62 (matrix_bin_expr -> expr DOTADD expr .)
+    DOTADD          reduce using rule 62 (matrix_bin_expr -> expr DOTADD expr .)
+    NEQ             reduce using rule 62 (matrix_bin_expr -> expr DOTADD expr .)
+    EQ              reduce using rule 62 (matrix_bin_expr -> expr DOTADD expr .)
+    GTE             reduce using rule 62 (matrix_bin_expr -> expr DOTADD expr .)
+    LTE             reduce using rule 62 (matrix_bin_expr -> expr DOTADD expr .)
+    GT              reduce using rule 62 (matrix_bin_expr -> expr DOTADD expr .)
+    LT              reduce using rule 62 (matrix_bin_expr -> expr DOTADD expr .)
+    DIV             reduce using rule 62 (matrix_bin_expr -> expr DOTADD expr .)
+    MUL             reduce using rule 62 (matrix_bin_expr -> expr DOTADD expr .)
+    SUB             reduce using rule 62 (matrix_bin_expr -> expr DOTADD expr .)
+    ADD             reduce using rule 62 (matrix_bin_expr -> expr DOTADD expr .)
+    )               reduce using rule 62 (matrix_bin_expr -> expr DOTADD expr .)
+    DOTDIV          shift and go to state 59
+    DOTMUL          shift and go to state 60
+
+
+state 105
+
+    (53) relation_expr -> expr NEQ expr .
+    (59) matrix_bin_expr -> expr . DOTDIV expr
+    (60) matrix_bin_expr -> expr . DOTMUL expr
+    (61) matrix_bin_expr -> expr . DOTSUB expr
+    (62) matrix_bin_expr -> expr . DOTADD expr
+    (53) relation_expr -> expr . NEQ expr
+    (54) relation_expr -> expr . EQ expr
+    (55) relation_expr -> expr . GTE expr
+    (56) relation_expr -> expr . LTE expr
+    (57) relation_expr -> expr . GT expr
+    (58) relation_expr -> expr . LT expr
+    (41) bin_expr -> expr . DIV expr
+    (42) bin_expr -> expr . MUL expr
+    (43) bin_expr -> expr . SUB expr
+    (44) bin_expr -> expr . ADD expr
+    ;               reduce using rule 53 (relation_expr -> expr NEQ expr .)
+    NEQ             reduce using rule 53 (relation_expr -> expr NEQ expr .)
+    EQ              reduce using rule 53 (relation_expr -> expr NEQ expr .)
+    GTE             reduce using rule 53 (relation_expr -> expr NEQ expr .)
+    LTE             reduce using rule 53 (relation_expr -> expr NEQ expr .)
+    GT              reduce using rule 53 (relation_expr -> expr NEQ expr .)
+    LT              reduce using rule 53 (relation_expr -> expr NEQ expr .)
+    )               reduce using rule 53 (relation_expr -> expr NEQ expr .)
+    DOTDIV          shift and go to state 59
+    DOTMUL          shift and go to state 60
+    DOTSUB          shift and go to state 61
+    DOTADD          shift and go to state 62
+    DIV             shift and go to state 69
+    MUL             shift and go to state 70
+    SUB             shift and go to state 71
+    ADD             shift and go to state 72
+
+
+state 106
+
+    (54) relation_expr -> expr EQ expr .
+    (59) matrix_bin_expr -> expr . DOTDIV expr
+    (60) matrix_bin_expr -> expr . DOTMUL expr
+    (61) matrix_bin_expr -> expr . DOTSUB expr
+    (62) matrix_bin_expr -> expr . DOTADD expr
+    (53) relation_expr -> expr . NEQ expr
+    (54) relation_expr -> expr . EQ expr
+    (55) relation_expr -> expr . GTE expr
+    (56) relation_expr -> expr . LTE expr
+    (57) relation_expr -> expr . GT expr
+    (58) relation_expr -> expr . LT expr
+    (41) bin_expr -> expr . DIV expr
+    (42) bin_expr -> expr . MUL expr
+    (43) bin_expr -> expr . SUB expr
+    (44) bin_expr -> expr . ADD expr
+    ;               reduce using rule 54 (relation_expr -> expr EQ expr .)
+    NEQ             reduce using rule 54 (relation_expr -> expr EQ expr .)
+    EQ              reduce using rule 54 (relation_expr -> expr EQ expr .)
+    GTE             reduce using rule 54 (relation_expr -> expr EQ expr .)
+    LTE             reduce using rule 54 (relation_expr -> expr EQ expr .)
+    GT              reduce using rule 54 (relation_expr -> expr EQ expr .)
+    LT              reduce using rule 54 (relation_expr -> expr EQ expr .)
+    )               reduce using rule 54 (relation_expr -> expr EQ expr .)
+    DOTDIV          shift and go to state 59
+    DOTMUL          shift and go to state 60
+    DOTSUB          shift and go to state 61
+    DOTADD          shift and go to state 62
+    DIV             shift and go to state 69
+    MUL             shift and go to state 70
+    SUB             shift and go to state 71
+    ADD             shift and go to state 72
+
+
+state 107
+
+    (55) relation_expr -> expr GTE expr .
+    (59) matrix_bin_expr -> expr . DOTDIV expr
+    (60) matrix_bin_expr -> expr . DOTMUL expr
+    (61) matrix_bin_expr -> expr . DOTSUB expr
+    (62) matrix_bin_expr -> expr . DOTADD expr
+    (53) relation_expr -> expr . NEQ expr
+    (54) relation_expr -> expr . EQ expr
+    (55) relation_expr -> expr . GTE expr
+    (56) relation_expr -> expr . LTE expr
+    (57) relation_expr -> expr . GT expr
+    (58) relation_expr -> expr . LT expr
+    (41) bin_expr -> expr . DIV expr
+    (42) bin_expr -> expr . MUL expr
+    (43) bin_expr -> expr . SUB expr
+    (44) bin_expr -> expr . ADD expr
+    ;               reduce using rule 55 (relation_expr -> expr GTE expr .)
+    NEQ             reduce using rule 55 (relation_expr -> expr GTE expr .)
+    EQ              reduce using rule 55 (relation_expr -> expr GTE expr .)
+    GTE             reduce using rule 55 (relation_expr -> expr GTE expr .)
+    LTE             reduce using rule 55 (relation_expr -> expr GTE expr .)
+    GT              reduce using rule 55 (relation_expr -> expr GTE expr .)
+    LT              reduce using rule 55 (relation_expr -> expr GTE expr .)
+    )               reduce using rule 55 (relation_expr -> expr GTE expr .)
+    DOTDIV          shift and go to state 59
+    DOTMUL          shift and go to state 60
+    DOTSUB          shift and go to state 61
+    DOTADD          shift and go to state 62
+    DIV             shift and go to state 69
+    MUL             shift and go to state 70
+    SUB             shift and go to state 71
+    ADD             shift and go to state 72
+
+
+state 108
+
+    (56) relation_expr -> expr LTE expr .
+    (59) matrix_bin_expr -> expr . DOTDIV expr
+    (60) matrix_bin_expr -> expr . DOTMUL expr
+    (61) matrix_bin_expr -> expr . DOTSUB expr
+    (62) matrix_bin_expr -> expr . DOTADD expr
+    (53) relation_expr -> expr . NEQ expr
+    (54) relation_expr -> expr . EQ expr
+    (55) relation_expr -> expr . GTE expr
+    (56) relation_expr -> expr . LTE expr
+    (57) relation_expr -> expr . GT expr
+    (58) relation_expr -> expr . LT expr
+    (41) bin_expr -> expr . DIV expr
+    (42) bin_expr -> expr . MUL expr
+    (43) bin_expr -> expr . SUB expr
+    (44) bin_expr -> expr . ADD expr
+    ;               reduce using rule 56 (relation_expr -> expr LTE expr .)
+    NEQ             reduce using rule 56 (relation_expr -> expr LTE expr .)
+    EQ              reduce using rule 56 (relation_expr -> expr LTE expr .)
+    GTE             reduce using rule 56 (relation_expr -> expr LTE expr .)
+    LTE             reduce using rule 56 (relation_expr -> expr LTE expr .)
+    GT              reduce using rule 56 (relation_expr -> expr LTE expr .)
+    LT              reduce using rule 56 (relation_expr -> expr LTE expr .)
+    )               reduce using rule 56 (relation_expr -> expr LTE expr .)
+    DOTDIV          shift and go to state 59
+    DOTMUL          shift and go to state 60
+    DOTSUB          shift and go to state 61
+    DOTADD          shift and go to state 62
+    DIV             shift and go to state 69
+    MUL             shift and go to state 70
+    SUB             shift and go to state 71
+    ADD             shift and go to state 72
+
+
+state 109
+
+    (57) relation_expr -> expr GT expr .
+    (59) matrix_bin_expr -> expr . DOTDIV expr
+    (60) matrix_bin_expr -> expr . DOTMUL expr
+    (61) matrix_bin_expr -> expr . DOTSUB expr
+    (62) matrix_bin_expr -> expr . DOTADD expr
+    (53) relation_expr -> expr . NEQ expr
+    (54) relation_expr -> expr . EQ expr
+    (55) relation_expr -> expr . GTE expr
+    (56) relation_expr -> expr . LTE expr
+    (57) relation_expr -> expr . GT expr
+    (58) relation_expr -> expr . LT expr
+    (41) bin_expr -> expr . DIV expr
+    (42) bin_expr -> expr . MUL expr
+    (43) bin_expr -> expr . SUB expr
+    (44) bin_expr -> expr . ADD expr
+    ;               reduce using rule 57 (relation_expr -> expr GT expr .)
+    NEQ             reduce using rule 57 (relation_expr -> expr GT expr .)
+    EQ              reduce using rule 57 (relation_expr -> expr GT expr .)
+    GTE             reduce using rule 57 (relation_expr -> expr GT expr .)
+    LTE             reduce using rule 57 (relation_expr -> expr GT expr .)
+    GT              reduce using rule 57 (relation_expr -> expr GT expr .)
+    LT              reduce using rule 57 (relation_expr -> expr GT expr .)
+    )               reduce using rule 57 (relation_expr -> expr GT expr .)
+    DOTDIV          shift and go to state 59
+    DOTMUL          shift and go to state 60
+    DOTSUB          shift and go to state 61
+    DOTADD          shift and go to state 62
+    DIV             shift and go to state 69
+    MUL             shift and go to state 70
+    SUB             shift and go to state 71
+    ADD             shift and go to state 72
+
+
+state 110
+
+    (58) relation_expr -> expr LT expr .
+    (59) matrix_bin_expr -> expr . DOTDIV expr
+    (60) matrix_bin_expr -> expr . DOTMUL expr
+    (61) matrix_bin_expr -> expr . DOTSUB expr
+    (62) matrix_bin_expr -> expr . DOTADD expr
+    (53) relation_expr -> expr . NEQ expr
+    (54) relation_expr -> expr . EQ expr
+    (55) relation_expr -> expr . GTE expr
+    (56) relation_expr -> expr . LTE expr
+    (57) relation_expr -> expr . GT expr
+    (58) relation_expr -> expr . LT expr
+    (41) bin_expr -> expr . DIV expr
+    (42) bin_expr -> expr . MUL expr
+    (43) bin_expr -> expr . SUB expr
+    (44) bin_expr -> expr . ADD expr
+    ;               reduce using rule 58 (relation_expr -> expr LT expr .)
+    NEQ             reduce using rule 58 (relation_expr -> expr LT expr .)
+    EQ              reduce using rule 58 (relation_expr -> expr LT expr .)
+    GTE             reduce using rule 58 (relation_expr -> expr LT expr .)
+    LTE             reduce using rule 58 (relation_expr -> expr LT expr .)
+    GT              reduce using rule 58 (relation_expr -> expr LT expr .)
+    LT              reduce using rule 58 (relation_expr -> expr LT expr .)
+    )               reduce using rule 58 (relation_expr -> expr LT expr .)
+    DOTDIV          shift and go to state 59
+    DOTMUL          shift and go to state 60
+    DOTSUB          shift and go to state 61
+    DOTADD          shift and go to state 62
+    DIV             shift and go to state 69
+    MUL             shift and go to state 70
+    SUB             shift and go to state 71
+    ADD             shift and go to state 72
+
+
+state 111
+
+    (41) bin_expr -> expr DIV expr .
+    (59) matrix_bin_expr -> expr . DOTDIV expr
+    (60) matrix_bin_expr -> expr . DOTMUL expr
+    (61) matrix_bin_expr -> expr . DOTSUB expr
+    (62) matrix_bin_expr -> expr . DOTADD expr
+    (53) relation_expr -> expr . NEQ expr
+    (54) relation_expr -> expr . EQ expr
+    (55) relation_expr -> expr . GTE expr
+    (56) relation_expr -> expr . LTE expr
+    (57) relation_expr -> expr . GT expr
+    (58) relation_expr -> expr . LT expr
+    (41) bin_expr -> expr . DIV expr
+    (42) bin_expr -> expr . MUL expr
+    (43) bin_expr -> expr . SUB expr
+    (44) bin_expr -> expr . ADD expr
+    ;               reduce using rule 41 (bin_expr -> expr DIV expr .)
+    NEQ             reduce using rule 41 (bin_expr -> expr DIV expr .)
+    EQ              reduce using rule 41 (bin_expr -> expr DIV expr .)
+    GTE             reduce using rule 41 (bin_expr -> expr DIV expr .)
+    LTE             reduce using rule 41 (bin_expr -> expr DIV expr .)
+    GT              reduce using rule 41 (bin_expr -> expr DIV expr .)
+    LT              reduce using rule 41 (bin_expr -> expr DIV expr .)
+    DIV             reduce using rule 41 (bin_expr -> expr DIV expr .)
+    MUL             reduce using rule 41 (bin_expr -> expr DIV expr .)
+    SUB             reduce using rule 41 (bin_expr -> expr DIV expr .)
+    ADD             reduce using rule 41 (bin_expr -> expr DIV expr .)
+    )               reduce using rule 41 (bin_expr -> expr DIV expr .)
+    DOTDIV          shift and go to state 59
+    DOTMUL          shift and go to state 60
+    DOTSUB          shift and go to state 61
+    DOTADD          shift and go to state 62
+
+
+state 112
+
+    (42) bin_expr -> expr MUL expr .
+    (59) matrix_bin_expr -> expr . DOTDIV expr
+    (60) matrix_bin_expr -> expr . DOTMUL expr
+    (61) matrix_bin_expr -> expr . DOTSUB expr
+    (62) matrix_bin_expr -> expr . DOTADD expr
+    (53) relation_expr -> expr . NEQ expr
+    (54) relation_expr -> expr . EQ expr
+    (55) relation_expr -> expr . GTE expr
+    (56) relation_expr -> expr . LTE expr
+    (57) relation_expr -> expr . GT expr
+    (58) relation_expr -> expr . LT expr
+    (41) bin_expr -> expr . DIV expr
+    (42) bin_expr -> expr . MUL expr
+    (43) bin_expr -> expr . SUB expr
+    (44) bin_expr -> expr . ADD expr
+    ;               reduce using rule 42 (bin_expr -> expr MUL expr .)
+    NEQ             reduce using rule 42 (bin_expr -> expr MUL expr .)
+    EQ              reduce using rule 42 (bin_expr -> expr MUL expr .)
+    GTE             reduce using rule 42 (bin_expr -> expr MUL expr .)
+    LTE             reduce using rule 42 (bin_expr -> expr MUL expr .)
+    GT              reduce using rule 42 (bin_expr -> expr MUL expr .)
+    LT              reduce using rule 42 (bin_expr -> expr MUL expr .)
+    DIV             reduce using rule 42 (bin_expr -> expr MUL expr .)
+    MUL             reduce using rule 42 (bin_expr -> expr MUL expr .)
+    SUB             reduce using rule 42 (bin_expr -> expr MUL expr .)
+    ADD             reduce using rule 42 (bin_expr -> expr MUL expr .)
+    )               reduce using rule 42 (bin_expr -> expr MUL expr .)
+    DOTDIV          shift and go to state 59
+    DOTMUL          shift and go to state 60
+    DOTSUB          shift and go to state 61
+    DOTADD          shift and go to state 62
+
+
+state 113
+
+    (43) bin_expr -> expr SUB expr .
+    (59) matrix_bin_expr -> expr . DOTDIV expr
+    (60) matrix_bin_expr -> expr . DOTMUL expr
+    (61) matrix_bin_expr -> expr . DOTSUB expr
+    (62) matrix_bin_expr -> expr . DOTADD expr
+    (53) relation_expr -> expr . NEQ expr
+    (54) relation_expr -> expr . EQ expr
+    (55) relation_expr -> expr . GTE expr
+    (56) relation_expr -> expr . LTE expr
+    (57) relation_expr -> expr . GT expr
+    (58) relation_expr -> expr . LT expr
+    (41) bin_expr -> expr . DIV expr
+    (42) bin_expr -> expr . MUL expr
+    (43) bin_expr -> expr . SUB expr
+    (44) bin_expr -> expr . ADD expr
+    ;               reduce using rule 43 (bin_expr -> expr SUB expr .)
+    NEQ             reduce using rule 43 (bin_expr -> expr SUB expr .)
+    EQ              reduce using rule 43 (bin_expr -> expr SUB expr .)
+    GTE             reduce using rule 43 (bin_expr -> expr SUB expr .)
+    LTE             reduce using rule 43 (bin_expr -> expr SUB expr .)
+    GT              reduce using rule 43 (bin_expr -> expr SUB expr .)
+    LT              reduce using rule 43 (bin_expr -> expr SUB expr .)
+    SUB             reduce using rule 43 (bin_expr -> expr SUB expr .)
+    ADD             reduce using rule 43 (bin_expr -> expr SUB expr .)
+    )               reduce using rule 43 (bin_expr -> expr SUB expr .)
+    DOTDIV          shift and go to state 59
+    DOTMUL          shift and go to state 60
+    DOTSUB          shift and go to state 61
+    DOTADD          shift and go to state 62
+    DIV             shift and go to state 69
+    MUL             shift and go to state 70
+
+
+state 114
+
+    (44) bin_expr -> expr ADD expr .
+    (59) matrix_bin_expr -> expr . DOTDIV expr
+    (60) matrix_bin_expr -> expr . DOTMUL expr
+    (61) matrix_bin_expr -> expr . DOTSUB expr
+    (62) matrix_bin_expr -> expr . DOTADD expr
+    (53) relation_expr -> expr . NEQ expr
+    (54) relation_expr -> expr . EQ expr
+    (55) relation_expr -> expr . GTE expr
+    (56) relation_expr -> expr . LTE expr
+    (57) relation_expr -> expr . GT expr
+    (58) relation_expr -> expr . LT expr
+    (41) bin_expr -> expr . DIV expr
+    (42) bin_expr -> expr . MUL expr
+    (43) bin_expr -> expr . SUB expr
+    (44) bin_expr -> expr . ADD expr
+    ;               reduce using rule 44 (bin_expr -> expr ADD expr .)
+    NEQ             reduce using rule 44 (bin_expr -> expr ADD expr .)
+    EQ              reduce using rule 44 (bin_expr -> expr ADD expr .)
+    GTE             reduce using rule 44 (bin_expr -> expr ADD expr .)
+    LTE             reduce using rule 44 (bin_expr -> expr ADD expr .)
+    GT              reduce using rule 44 (bin_expr -> expr ADD expr .)
+    LT              reduce using rule 44 (bin_expr -> expr ADD expr .)
+    SUB             reduce using rule 44 (bin_expr -> expr ADD expr .)
+    ADD             reduce using rule 44 (bin_expr -> expr ADD expr .)
+    )               reduce using rule 44 (bin_expr -> expr ADD expr .)
+    DOTDIV          shift and go to state 59
+    DOTMUL          shift and go to state 60
+    DOTSUB          shift and go to state 61
+    DOTADD          shift and go to state 62
+    DIV             shift and go to state 69
+    MUL             shift and go to state 70
+
+
+state 115
+
+    (73) matrix_row -> [ string_of_num . ]
+    (75) string_of_num -> string_of_num . , INTNUM
+    ]               shift and go to state 136
+    ,               shift and go to state 133
+
+
+state 116
+
+    (74) matrix_row -> [ ] .
+    ]               reduce using rule 74 (matrix_row -> [ ] .)
+    ,               reduce using rule 74 (matrix_row -> [ ] .)
+
+
+state 117
+
+    (69) matrix -> [ matrix_rows ] .
+    '               reduce using rule 69 (matrix -> [ matrix_rows ] .)
+    ;               reduce using rule 69 (matrix -> [ matrix_rows ] .)
+
+
+state 118
+
+    (71) matrix_rows -> matrix_rows , . matrix_row
+    (73) matrix_row -> . [ string_of_num ]
+    (74) matrix_row -> . [ ]
+    [               shift and go to state 74
+
+    matrix_row                     shift and go to state 137
+
+state 119
+
+    (65) matrix_funcs -> EYE ( INTNUM . )
+    )               shift and go to state 138
+
+
+state 120
+
+    (66) matrix_funcs -> ONES ( INTNUM . )
+    )               shift and go to state 139
+
+
+state 121
+
+    (67) matrix_funcs -> ZEROS ( INTNUM . )
+    )               shift and go to state 140
+
+
+state 122
+
+    (22) print_rek -> print_rek , value .
+    ;               reduce using rule 22 (print_rek -> print_rek , value .)
+    ,               reduce using rule 22 (print_rek -> print_rek , value .)
+
+
+state 123
+
+    (45) assign_expr -> id_ref DIVASSIGN expr ; .
+    {               reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    RETURN          reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    CONTINUE        reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    BREAK           reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    ;               reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    PRINT           reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    FOR             reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    WHILE           reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    IF              reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    ID              reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    $end            reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    }               reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    DOTDIV          reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    DOTMUL          reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    DOTSUB          reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    DOTADD          reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    NEQ             reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    EQ              reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    GTE             reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    LTE             reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    GT              reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    LT              reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    DIV             reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    MUL             reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    SUB             reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    ADD             reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    )               reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+    ELSE            reduce using rule 45 (assign_expr -> id_ref DIVASSIGN expr ; .)
+
+
+state 124
+
+    (46) assign_expr -> id_ref MULASSIGN expr ; .
+    {               reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    RETURN          reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    CONTINUE        reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    BREAK           reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    ;               reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    PRINT           reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    FOR             reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    WHILE           reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    IF              reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    ID              reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    $end            reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    }               reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    DOTDIV          reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    DOTMUL          reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    DOTSUB          reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    DOTADD          reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    NEQ             reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    EQ              reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    GTE             reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    LTE             reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    GT              reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    LT              reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    DIV             reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    MUL             reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    SUB             reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    ADD             reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    )               reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+    ELSE            reduce using rule 46 (assign_expr -> id_ref MULASSIGN expr ; .)
+
+
+state 125
+
+    (47) assign_expr -> id_ref SUBASSIGN expr ; .
+    {               reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    RETURN          reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    CONTINUE        reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    BREAK           reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    ;               reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    PRINT           reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    FOR             reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    WHILE           reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    IF              reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    ID              reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    $end            reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    }               reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    DOTDIV          reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    DOTMUL          reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    DOTSUB          reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    DOTADD          reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    NEQ             reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    EQ              reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    GTE             reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    LTE             reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    GT              reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    LT              reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    DIV             reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    MUL             reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    SUB             reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    ADD             reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    )               reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+    ELSE            reduce using rule 47 (assign_expr -> id_ref SUBASSIGN expr ; .)
+
+
+state 126
+
+    (48) assign_expr -> id_ref ADDASSIGN expr ; .
+    {               reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    RETURN          reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    CONTINUE        reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    BREAK           reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    ;               reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    PRINT           reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    FOR             reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    WHILE           reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    IF              reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    ID              reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    $end            reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    }               reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    DOTDIV          reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    DOTMUL          reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    DOTSUB          reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    DOTADD          reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    NEQ             reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    EQ              reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    GTE             reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    LTE             reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    GT              reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    LT              reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    DIV             reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    MUL             reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    SUB             reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    ADD             reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    )               reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+    ELSE            reduce using rule 48 (assign_expr -> id_ref ADDASSIGN expr ; .)
+
+
+state 127
+
+    (49) assign_expr -> id_ref = matrix ; .
+    {               reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    RETURN          reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    CONTINUE        reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    BREAK           reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    ;               reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    PRINT           reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    FOR             reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    WHILE           reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    IF              reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    ID              reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    $end            reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    }               reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    DOTDIV          reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    DOTMUL          reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    DOTSUB          reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    DOTADD          reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    NEQ             reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    EQ              reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    GTE             reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    LTE             reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    GT              reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    LT              reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    DIV             reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    MUL             reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    SUB             reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    ADD             reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    )               reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+    ELSE            reduce using rule 49 (assign_expr -> id_ref = matrix ; .)
+
+
+state 128
+
+    (50) assign_expr -> id_ref = expr ; .
+    {               reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    RETURN          reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    CONTINUE        reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    BREAK           reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    ;               reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    PRINT           reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    FOR             reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    WHILE           reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    IF              reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    ID              reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    $end            reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    }               reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    DOTDIV          reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    DOTMUL          reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    DOTSUB          reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    DOTADD          reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    NEQ             reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    EQ              reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    GTE             reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    LTE             reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    GT              reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    LT              reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    DIV             reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    MUL             reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    SUB             reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    ADD             reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    )               reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+    ELSE            reduce using rule 50 (assign_expr -> id_ref = expr ; .)
+
+
+state 129
+
+    (17) id_int -> ID .
+    :               reduce using rule 17 (id_int -> ID .)
+    {               reduce using rule 17 (id_int -> ID .)
+    RETURN          reduce using rule 17 (id_int -> ID .)
+    CONTINUE        reduce using rule 17 (id_int -> ID .)
+    BREAK           reduce using rule 17 (id_int -> ID .)
+    ;               reduce using rule 17 (id_int -> ID .)
+    PRINT           reduce using rule 17 (id_int -> ID .)
+    FOR             reduce using rule 17 (id_int -> ID .)
+    WHILE           reduce using rule 17 (id_int -> ID .)
+    IF              reduce using rule 17 (id_int -> ID .)
+    ID              reduce using rule 17 (id_int -> ID .)
+
+
+state 130
+
+    (15) for_stmt -> FOR ID = id_int . : id_int stmt_braces
+    :               shift and go to state 141
+
+
+state 131
+
+    (16) id_int -> INTNUM .
+    :               reduce using rule 16 (id_int -> INTNUM .)
+    {               reduce using rule 16 (id_int -> INTNUM .)
+    RETURN          reduce using rule 16 (id_int -> INTNUM .)
+    CONTINUE        reduce using rule 16 (id_int -> INTNUM .)
+    BREAK           reduce using rule 16 (id_int -> INTNUM .)
+    ;               reduce using rule 16 (id_int -> INTNUM .)
+    PRINT           reduce using rule 16 (id_int -> INTNUM .)
+    FOR             reduce using rule 16 (id_int -> INTNUM .)
+    WHILE           reduce using rule 16 (id_int -> INTNUM .)
+    IF              reduce using rule 16 (id_int -> INTNUM .)
+    ID              reduce using rule 16 (id_int -> INTNUM .)
+
+
+state 132
+
+    (68) matrix_ref -> ID [ string_of_num ] .
+    DIVASSIGN       reduce using rule 68 (matrix_ref -> ID [ string_of_num ] .)
+    MULASSIGN       reduce using rule 68 (matrix_ref -> ID [ string_of_num ] .)
+    SUBASSIGN       reduce using rule 68 (matrix_ref -> ID [ string_of_num ] .)
+    ADDASSIGN       reduce using rule 68 (matrix_ref -> ID [ string_of_num ] .)
+    =               reduce using rule 68 (matrix_ref -> ID [ string_of_num ] .)
+    ;               reduce using rule 68 (matrix_ref -> ID [ string_of_num ] .)
+    DOTDIV          reduce using rule 68 (matrix_ref -> ID [ string_of_num ] .)
+    DOTMUL          reduce using rule 68 (matrix_ref -> ID [ string_of_num ] .)
+    DOTSUB          reduce using rule 68 (matrix_ref -> ID [ string_of_num ] .)
+    DOTADD          reduce using rule 68 (matrix_ref -> ID [ string_of_num ] .)
+    NEQ             reduce using rule 68 (matrix_ref -> ID [ string_of_num ] .)
+    EQ              reduce using rule 68 (matrix_ref -> ID [ string_of_num ] .)
+    GTE             reduce using rule 68 (matrix_ref -> ID [ string_of_num ] .)
+    LTE             reduce using rule 68 (matrix_ref -> ID [ string_of_num ] .)
+    GT              reduce using rule 68 (matrix_ref -> ID [ string_of_num ] .)
+    LT              reduce using rule 68 (matrix_ref -> ID [ string_of_num ] .)
+    DIV             reduce using rule 68 (matrix_ref -> ID [ string_of_num ] .)
+    MUL             reduce using rule 68 (matrix_ref -> ID [ string_of_num ] .)
+    SUB             reduce using rule 68 (matrix_ref -> ID [ string_of_num ] .)
+    ADD             reduce using rule 68 (matrix_ref -> ID [ string_of_num ] .)
+    )               reduce using rule 68 (matrix_ref -> ID [ string_of_num ] .)
+
+
+state 133
+
+    (75) string_of_num -> string_of_num , . INTNUM
+    INTNUM          shift and go to state 142
+
+
+state 134
+
+    (14) while_stmt -> WHILE ( bool_expr ) . stmt_braces
+    (18) stmt_braces -> . stmt
+    (19) stmt_braces -> . { statements }
+    (3) stmt -> . RETURN expr ;
+    (4) stmt -> . CONTINUE ;
+    (5) stmt -> . BREAK ;
+    (6) stmt -> . print_stmt
+    (7) stmt -> . assign_expr
+    (8) stmt -> . for_stmt
+    (9) stmt -> . while_stmt
+    (10) stmt -> . if_stmt
+    (11) stmt -> . ;
+    (20) print_stmt -> . PRINT print_rek ;
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (15) for_stmt -> . FOR ID = id_int : id_int stmt_braces
+    (14) while_stmt -> . WHILE ( bool_expr ) stmt_braces
+    (12) if_stmt -> . IF ( bool_expr ) stmt_braces
+    (13) if_stmt -> . IF ( bool_expr ) stmt_braces ELSE stmt_braces
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    (68) matrix_ref -> . ID [ string_of_num ]
+    {               shift and go to state 4
+    RETURN          shift and go to state 5
+    CONTINUE        shift and go to state 7
+    BREAK           shift and go to state 8
+    ;               shift and go to state 6
+    PRINT           shift and go to state 14
+    FOR             shift and go to state 16
+    WHILE           shift and go to state 18
+    IF              shift and go to state 19
+    ID              shift and go to state 17
+
+    stmt_braces                    shift and go to state 143
+    stmt                           shift and go to state 3
+    print_stmt                     shift and go to state 9
+    assign_expr                    shift and go to state 10
+    for_stmt                       shift and go to state 11
+    while_stmt                     shift and go to state 12
+    if_stmt                        shift and go to state 13
+    id_ref                         shift and go to state 15
+    matrix_ref                     shift and go to state 20
+
+state 135
+
+    (12) if_stmt -> IF ( bool_expr ) . stmt_braces
+    (13) if_stmt -> IF ( bool_expr ) . stmt_braces ELSE stmt_braces
+    (18) stmt_braces -> . stmt
+    (19) stmt_braces -> . { statements }
+    (3) stmt -> . RETURN expr ;
+    (4) stmt -> . CONTINUE ;
+    (5) stmt -> . BREAK ;
+    (6) stmt -> . print_stmt
+    (7) stmt -> . assign_expr
+    (8) stmt -> . for_stmt
+    (9) stmt -> . while_stmt
+    (10) stmt -> . if_stmt
+    (11) stmt -> . ;
+    (20) print_stmt -> . PRINT print_rek ;
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (15) for_stmt -> . FOR ID = id_int : id_int stmt_braces
+    (14) while_stmt -> . WHILE ( bool_expr ) stmt_braces
+    (12) if_stmt -> . IF ( bool_expr ) stmt_braces
+    (13) if_stmt -> . IF ( bool_expr ) stmt_braces ELSE stmt_braces
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    (68) matrix_ref -> . ID [ string_of_num ]
+    {               shift and go to state 4
+    RETURN          shift and go to state 5
+    CONTINUE        shift and go to state 7
+    BREAK           shift and go to state 8
+    ;               shift and go to state 6
+    PRINT           shift and go to state 14
+    FOR             shift and go to state 16
+    WHILE           shift and go to state 18
+    IF              shift and go to state 19
+    ID              shift and go to state 17
+
+    stmt_braces                    shift and go to state 144
+    stmt                           shift and go to state 3
+    print_stmt                     shift and go to state 9
+    assign_expr                    shift and go to state 10
+    for_stmt                       shift and go to state 11
+    while_stmt                     shift and go to state 12
+    if_stmt                        shift and go to state 13
+    id_ref                         shift and go to state 15
+    matrix_ref                     shift and go to state 20
+
+state 136
+
+    (73) matrix_row -> [ string_of_num ] .
+    ]               reduce using rule 73 (matrix_row -> [ string_of_num ] .)
+    ,               reduce using rule 73 (matrix_row -> [ string_of_num ] .)
+
+
+state 137
+
+    (71) matrix_rows -> matrix_rows , matrix_row .
+    ]               reduce using rule 71 (matrix_rows -> matrix_rows , matrix_row .)
+    ,               reduce using rule 71 (matrix_rows -> matrix_rows , matrix_row .)
+
+
+state 138
+
+    (65) matrix_funcs -> EYE ( INTNUM ) .
+    ;               reduce using rule 65 (matrix_funcs -> EYE ( INTNUM ) .)
+    DOTDIV          reduce using rule 65 (matrix_funcs -> EYE ( INTNUM ) .)
+    DOTMUL          reduce using rule 65 (matrix_funcs -> EYE ( INTNUM ) .)
+    DOTSUB          reduce using rule 65 (matrix_funcs -> EYE ( INTNUM ) .)
+    DOTADD          reduce using rule 65 (matrix_funcs -> EYE ( INTNUM ) .)
+    NEQ             reduce using rule 65 (matrix_funcs -> EYE ( INTNUM ) .)
+    EQ              reduce using rule 65 (matrix_funcs -> EYE ( INTNUM ) .)
+    GTE             reduce using rule 65 (matrix_funcs -> EYE ( INTNUM ) .)
+    LTE             reduce using rule 65 (matrix_funcs -> EYE ( INTNUM ) .)
+    GT              reduce using rule 65 (matrix_funcs -> EYE ( INTNUM ) .)
+    LT              reduce using rule 65 (matrix_funcs -> EYE ( INTNUM ) .)
+    DIV             reduce using rule 65 (matrix_funcs -> EYE ( INTNUM ) .)
+    MUL             reduce using rule 65 (matrix_funcs -> EYE ( INTNUM ) .)
+    SUB             reduce using rule 65 (matrix_funcs -> EYE ( INTNUM ) .)
+    ADD             reduce using rule 65 (matrix_funcs -> EYE ( INTNUM ) .)
+    )               reduce using rule 65 (matrix_funcs -> EYE ( INTNUM ) .)
+
+
+state 139
+
+    (66) matrix_funcs -> ONES ( INTNUM ) .
+    ;               reduce using rule 66 (matrix_funcs -> ONES ( INTNUM ) .)
+    DOTDIV          reduce using rule 66 (matrix_funcs -> ONES ( INTNUM ) .)
+    DOTMUL          reduce using rule 66 (matrix_funcs -> ONES ( INTNUM ) .)
+    DOTSUB          reduce using rule 66 (matrix_funcs -> ONES ( INTNUM ) .)
+    DOTADD          reduce using rule 66 (matrix_funcs -> ONES ( INTNUM ) .)
+    NEQ             reduce using rule 66 (matrix_funcs -> ONES ( INTNUM ) .)
+    EQ              reduce using rule 66 (matrix_funcs -> ONES ( INTNUM ) .)
+    GTE             reduce using rule 66 (matrix_funcs -> ONES ( INTNUM ) .)
+    LTE             reduce using rule 66 (matrix_funcs -> ONES ( INTNUM ) .)
+    GT              reduce using rule 66 (matrix_funcs -> ONES ( INTNUM ) .)
+    LT              reduce using rule 66 (matrix_funcs -> ONES ( INTNUM ) .)
+    DIV             reduce using rule 66 (matrix_funcs -> ONES ( INTNUM ) .)
+    MUL             reduce using rule 66 (matrix_funcs -> ONES ( INTNUM ) .)
+    SUB             reduce using rule 66 (matrix_funcs -> ONES ( INTNUM ) .)
+    ADD             reduce using rule 66 (matrix_funcs -> ONES ( INTNUM ) .)
+    )               reduce using rule 66 (matrix_funcs -> ONES ( INTNUM ) .)
+
+
+state 140
+
+    (67) matrix_funcs -> ZEROS ( INTNUM ) .
+    ;               reduce using rule 67 (matrix_funcs -> ZEROS ( INTNUM ) .)
+    DOTDIV          reduce using rule 67 (matrix_funcs -> ZEROS ( INTNUM ) .)
+    DOTMUL          reduce using rule 67 (matrix_funcs -> ZEROS ( INTNUM ) .)
+    DOTSUB          reduce using rule 67 (matrix_funcs -> ZEROS ( INTNUM ) .)
+    DOTADD          reduce using rule 67 (matrix_funcs -> ZEROS ( INTNUM ) .)
+    NEQ             reduce using rule 67 (matrix_funcs -> ZEROS ( INTNUM ) .)
+    EQ              reduce using rule 67 (matrix_funcs -> ZEROS ( INTNUM ) .)
+    GTE             reduce using rule 67 (matrix_funcs -> ZEROS ( INTNUM ) .)
+    LTE             reduce using rule 67 (matrix_funcs -> ZEROS ( INTNUM ) .)
+    GT              reduce using rule 67 (matrix_funcs -> ZEROS ( INTNUM ) .)
+    LT              reduce using rule 67 (matrix_funcs -> ZEROS ( INTNUM ) .)
+    DIV             reduce using rule 67 (matrix_funcs -> ZEROS ( INTNUM ) .)
+    MUL             reduce using rule 67 (matrix_funcs -> ZEROS ( INTNUM ) .)
+    SUB             reduce using rule 67 (matrix_funcs -> ZEROS ( INTNUM ) .)
+    ADD             reduce using rule 67 (matrix_funcs -> ZEROS ( INTNUM ) .)
+    )               reduce using rule 67 (matrix_funcs -> ZEROS ( INTNUM ) .)
+
+
+state 141
+
+    (15) for_stmt -> FOR ID = id_int : . id_int stmt_braces
+    (16) id_int -> . INTNUM
+    (17) id_int -> . ID
+    INTNUM          shift and go to state 131
+    ID              shift and go to state 129
+
+    id_int                         shift and go to state 145
+
+state 142
+
+    (75) string_of_num -> string_of_num , INTNUM .
+    ]               reduce using rule 75 (string_of_num -> string_of_num , INTNUM .)
+    ,               reduce using rule 75 (string_of_num -> string_of_num , INTNUM .)
+
+
+state 143
+
+    (14) while_stmt -> WHILE ( bool_expr ) stmt_braces .
+    {               reduce using rule 14 (while_stmt -> WHILE ( bool_expr ) stmt_braces .)
+    RETURN          reduce using rule 14 (while_stmt -> WHILE ( bool_expr ) stmt_braces .)
+    CONTINUE        reduce using rule 14 (while_stmt -> WHILE ( bool_expr ) stmt_braces .)
+    BREAK           reduce using rule 14 (while_stmt -> WHILE ( bool_expr ) stmt_braces .)
+    ;               reduce using rule 14 (while_stmt -> WHILE ( bool_expr ) stmt_braces .)
+    PRINT           reduce using rule 14 (while_stmt -> WHILE ( bool_expr ) stmt_braces .)
+    FOR             reduce using rule 14 (while_stmt -> WHILE ( bool_expr ) stmt_braces .)
+    WHILE           reduce using rule 14 (while_stmt -> WHILE ( bool_expr ) stmt_braces .)
+    IF              reduce using rule 14 (while_stmt -> WHILE ( bool_expr ) stmt_braces .)
+    ID              reduce using rule 14 (while_stmt -> WHILE ( bool_expr ) stmt_braces .)
+    $end            reduce using rule 14 (while_stmt -> WHILE ( bool_expr ) stmt_braces .)
+    }               reduce using rule 14 (while_stmt -> WHILE ( bool_expr ) stmt_braces .)
+    ELSE            reduce using rule 14 (while_stmt -> WHILE ( bool_expr ) stmt_braces .)
+
+
+state 144
+
+    (12) if_stmt -> IF ( bool_expr ) stmt_braces .
+    (13) if_stmt -> IF ( bool_expr ) stmt_braces . ELSE stmt_braces
+    {               reduce using rule 12 (if_stmt -> IF ( bool_expr ) stmt_braces .)
+    RETURN          reduce using rule 12 (if_stmt -> IF ( bool_expr ) stmt_braces .)
+    CONTINUE        reduce using rule 12 (if_stmt -> IF ( bool_expr ) stmt_braces .)
+    BREAK           reduce using rule 12 (if_stmt -> IF ( bool_expr ) stmt_braces .)
+    ;               reduce using rule 12 (if_stmt -> IF ( bool_expr ) stmt_braces .)
+    PRINT           reduce using rule 12 (if_stmt -> IF ( bool_expr ) stmt_braces .)
+    FOR             reduce using rule 12 (if_stmt -> IF ( bool_expr ) stmt_braces .)
+    WHILE           reduce using rule 12 (if_stmt -> IF ( bool_expr ) stmt_braces .)
+    IF              reduce using rule 12 (if_stmt -> IF ( bool_expr ) stmt_braces .)
+    ID              reduce using rule 12 (if_stmt -> IF ( bool_expr ) stmt_braces .)
+    $end            reduce using rule 12 (if_stmt -> IF ( bool_expr ) stmt_braces .)
+    }               reduce using rule 12 (if_stmt -> IF ( bool_expr ) stmt_braces .)
+    ELSE            shift and go to state 146
+
+
+state 145
+
+    (15) for_stmt -> FOR ID = id_int : id_int . stmt_braces
+    (18) stmt_braces -> . stmt
+    (19) stmt_braces -> . { statements }
+    (3) stmt -> . RETURN expr ;
+    (4) stmt -> . CONTINUE ;
+    (5) stmt -> . BREAK ;
+    (6) stmt -> . print_stmt
+    (7) stmt -> . assign_expr
+    (8) stmt -> . for_stmt
+    (9) stmt -> . while_stmt
+    (10) stmt -> . if_stmt
+    (11) stmt -> . ;
+    (20) print_stmt -> . PRINT print_rek ;
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (15) for_stmt -> . FOR ID = id_int : id_int stmt_braces
+    (14) while_stmt -> . WHILE ( bool_expr ) stmt_braces
+    (12) if_stmt -> . IF ( bool_expr ) stmt_braces
+    (13) if_stmt -> . IF ( bool_expr ) stmt_braces ELSE stmt_braces
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    (68) matrix_ref -> . ID [ string_of_num ]
+    {               shift and go to state 4
+    RETURN          shift and go to state 5
+    CONTINUE        shift and go to state 7
+    BREAK           shift and go to state 8
+    ;               shift and go to state 6
+    PRINT           shift and go to state 14
+    FOR             shift and go to state 16
+    WHILE           shift and go to state 18
+    IF              shift and go to state 19
+    ID              shift and go to state 17
+
+    stmt_braces                    shift and go to state 147
+    stmt                           shift and go to state 3
+    print_stmt                     shift and go to state 9
+    assign_expr                    shift and go to state 10
+    for_stmt                       shift and go to state 11
+    while_stmt                     shift and go to state 12
+    if_stmt                        shift and go to state 13
+    id_ref                         shift and go to state 15
+    matrix_ref                     shift and go to state 20
+
+state 146
+
+    (13) if_stmt -> IF ( bool_expr ) stmt_braces ELSE . stmt_braces
+    (18) stmt_braces -> . stmt
+    (19) stmt_braces -> . { statements }
+    (3) stmt -> . RETURN expr ;
+    (4) stmt -> . CONTINUE ;
+    (5) stmt -> . BREAK ;
+    (6) stmt -> . print_stmt
+    (7) stmt -> . assign_expr
+    (8) stmt -> . for_stmt
+    (9) stmt -> . while_stmt
+    (10) stmt -> . if_stmt
+    (11) stmt -> . ;
+    (20) print_stmt -> . PRINT print_rek ;
+    (45) assign_expr -> . id_ref DIVASSIGN expr ;
+    (46) assign_expr -> . id_ref MULASSIGN expr ;
+    (47) assign_expr -> . id_ref SUBASSIGN expr ;
+    (48) assign_expr -> . id_ref ADDASSIGN expr ;
+    (49) assign_expr -> . id_ref = matrix ;
+    (50) assign_expr -> . id_ref = expr ;
+    (15) for_stmt -> . FOR ID = id_int : id_int stmt_braces
+    (14) while_stmt -> . WHILE ( bool_expr ) stmt_braces
+    (12) if_stmt -> . IF ( bool_expr ) stmt_braces
+    (13) if_stmt -> . IF ( bool_expr ) stmt_braces ELSE stmt_braces
+    (51) id_ref -> . matrix_ref
+    (52) id_ref -> . ID
+    (68) matrix_ref -> . ID [ string_of_num ]
+    {               shift and go to state 4
+    RETURN          shift and go to state 5
+    CONTINUE        shift and go to state 7
+    BREAK           shift and go to state 8
+    ;               shift and go to state 6
+    PRINT           shift and go to state 14
+    FOR             shift and go to state 16
+    WHILE           shift and go to state 18
+    IF              shift and go to state 19
+    ID              shift and go to state 17
+
+    stmt_braces                    shift and go to state 148
+    stmt                           shift and go to state 3
+    print_stmt                     shift and go to state 9
+    assign_expr                    shift and go to state 10
+    for_stmt                       shift and go to state 11
+    while_stmt                     shift and go to state 12
+    if_stmt                        shift and go to state 13
+    id_ref                         shift and go to state 15
+    matrix_ref                     shift and go to state 20
+
+state 147
+
+    (15) for_stmt -> FOR ID = id_int : id_int stmt_braces .
+    {               reduce using rule 15 (for_stmt -> FOR ID = id_int : id_int stmt_braces .)
+    RETURN          reduce using rule 15 (for_stmt -> FOR ID = id_int : id_int stmt_braces .)
+    CONTINUE        reduce using rule 15 (for_stmt -> FOR ID = id_int : id_int stmt_braces .)
+    BREAK           reduce using rule 15 (for_stmt -> FOR ID = id_int : id_int stmt_braces .)
+    ;               reduce using rule 15 (for_stmt -> FOR ID = id_int : id_int stmt_braces .)
+    PRINT           reduce using rule 15 (for_stmt -> FOR ID = id_int : id_int stmt_braces .)
+    FOR             reduce using rule 15 (for_stmt -> FOR ID = id_int : id_int stmt_braces .)
+    WHILE           reduce using rule 15 (for_stmt -> FOR ID = id_int : id_int stmt_braces .)
+    IF              reduce using rule 15 (for_stmt -> FOR ID = id_int : id_int stmt_braces .)
+    ID              reduce using rule 15 (for_stmt -> FOR ID = id_int : id_int stmt_braces .)
+    $end            reduce using rule 15 (for_stmt -> FOR ID = id_int : id_int stmt_braces .)
+    }               reduce using rule 15 (for_stmt -> FOR ID = id_int : id_int stmt_braces .)
+    ELSE            reduce using rule 15 (for_stmt -> FOR ID = id_int : id_int stmt_braces .)
+
+
+state 148
+
+    (13) if_stmt -> IF ( bool_expr ) stmt_braces ELSE stmt_braces .
+    {               reduce using rule 13 (if_stmt -> IF ( bool_expr ) stmt_braces ELSE stmt_braces .)
+    RETURN          reduce using rule 13 (if_stmt -> IF ( bool_expr ) stmt_braces ELSE stmt_braces .)
+    CONTINUE        reduce using rule 13 (if_stmt -> IF ( bool_expr ) stmt_braces ELSE stmt_braces .)
+    BREAK           reduce using rule 13 (if_stmt -> IF ( bool_expr ) stmt_braces ELSE stmt_braces .)
+    ;               reduce using rule 13 (if_stmt -> IF ( bool_expr ) stmt_braces ELSE stmt_braces .)
+    PRINT           reduce using rule 13 (if_stmt -> IF ( bool_expr ) stmt_braces ELSE stmt_braces .)
+    FOR             reduce using rule 13 (if_stmt -> IF ( bool_expr ) stmt_braces ELSE stmt_braces .)
+    WHILE           reduce using rule 13 (if_stmt -> IF ( bool_expr ) stmt_braces ELSE stmt_braces .)
+    IF              reduce using rule 13 (if_stmt -> IF ( bool_expr ) stmt_braces ELSE stmt_braces .)
+    ID              reduce using rule 13 (if_stmt -> IF ( bool_expr ) stmt_braces ELSE stmt_braces .)
+    $end            reduce using rule 13 (if_stmt -> IF ( bool_expr ) stmt_braces ELSE stmt_braces .)
+    }               reduce using rule 13 (if_stmt -> IF ( bool_expr ) stmt_braces ELSE stmt_braces .)
+    ELSE            reduce using rule 13 (if_stmt -> IF ( bool_expr ) stmt_braces ELSE stmt_braces .)

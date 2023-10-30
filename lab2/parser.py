@@ -18,12 +18,13 @@ class MyParser(Parser):
         ('left', DOTMUL, DOTDIV)
     )
     
-    @_('statements stmt_braces',
-       'stmt_braces')
+    @_('statements stmt',
+       'stmt')
     def statements(self, p):
         return None
     
     @_('";"',
+       '"{" statements "}"',
        'if_stmt',
        'while_stmt',
        'for_stmt',
@@ -35,27 +36,22 @@ class MyParser(Parser):
     def stmt(self, p):
         return None
     
-    @_('IF "(" bool_expr ")" stmt_braces ELSE stmt_braces',
-       'IF "(" bool_expr ")" stmt_braces %prec IFX')
+    @_('IF "(" bool_expr ")" stmt ELSE stmt',
+       'IF "(" bool_expr ")" stmt %prec IFX')
     def if_stmt(self, p):
         return None
     
-    @_('WHILE "(" bool_expr ")" stmt_braces')
+    @_('WHILE "(" bool_expr ")" stmt')
     def while_stmt(self, p):
         return None
     
-    @_('FOR ID "=" id_int ":" id_int stmt_braces')
+    @_('FOR ID "=" id_int ":" id_int stmt')
     def for_stmt(self, p):
         return None
     
     @_('ID',
        'INTNUM')
     def id_int(self, p):
-        return None
-    
-    @_('"{" statements "}"',
-       'stmt')
-    def stmt_braces(self, p):
         return None
     
     @_('PRINT print_rek ";"')

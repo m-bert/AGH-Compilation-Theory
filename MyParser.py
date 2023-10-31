@@ -1,5 +1,5 @@
 from sly import Parser
-from scaner import MyLexer
+from MyScanner import MyLexer
 
 # nie wiem czy akceptujemy na przykład x += "cos", "costam" < "cos2" itd. (pewnie do zmiany)
 # czy możena np. return k += 5
@@ -171,17 +171,17 @@ if __name__ == '__main__':
     parser = MyParser()
 
     print("##### [TEST 1] #####")
-    with open("lab2\ex1.txt") as file:
+    with open("examples/z2/ex1.txt") as file:
         data = file.read()
         parser.parse(lexer.tokenize(data))
         
     print("##### [TEST 2] #####")
-    with open("lab2\ex2.txt") as file:
+    with open("examples/z2/ex2.txt") as file:
         data = file.read()
         parser.parse(lexer.tokenize(data))
         
     print("##### [TEST 3] #####")
-    with open("lab2\ex3.txt") as file:
+    with open("examples/z2/ex3.txt") as file:
         data = file.read()
         parser.parse(lexer.tokenize(data))
     

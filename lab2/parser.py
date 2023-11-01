@@ -1,9 +1,6 @@
 from sly import Parser
 from scaner import MyLexer
 
-# nie wiem czy akceptujemy na przykład x += "cos", "costam" < "cos2" itd. (pewnie do zmiany)
-# czy możena np. return k += 5
-
 class MyParser(Parser):
     tokens = MyLexer.tokens
     debugfile = 'parser.out'
@@ -36,12 +33,12 @@ class MyParser(Parser):
     def stmt(self, p):
         return None
     
-    @_('IF "(" bool_expr ")" stmt ELSE stmt',
-       'IF "(" bool_expr ")" stmt %prec IFX')
+    @_('IF "(" relation_expr ")" stmt ELSE stmt',
+       'IF "(" relation_expr ")" stmt %prec IFX')
     def if_stmt(self, p):
         return None
     
-    @_('WHILE "(" bool_expr ")" stmt')
+    @_('WHILE "(" relation_expr ")" stmt')
     def while_stmt(self, p):
         return None
     
@@ -70,38 +67,32 @@ class MyParser(Parser):
     def value(self, p):
         return None
     
-    @_('SUB ID',
-       'SUB INTNUM',
-       'SUB FLOAT')
-    def inv_num(self, p):
-        return None
-    
     @_('value',
-       'inv_num',
-       'bin_expr',
        'assign_expr',
        'relation_expr',
-       'matrix_bin_expr',
-       'matrix_transpose',
        'matrix_funcs',
-       'matrix_ref')
+       'matrix_ref',
+       'SUB expr',
+       '"[" matrix_rows "]"',
+       'expr "\'"')
     def expr(self, p):
-        return None
-    
-    @_('bin_expr',
-       'relation_expr')
-    def bool_expr(self, p):
         return None
     
     @_('expr ADD expr',
        'expr SUB expr',
        'expr MUL expr',
        'expr DIV expr')
-    def bin_expr(self, p):
+    def expr(self, p):
+        return None
+    
+    @_('expr DOTADD expr',
+       'expr DOTSUB expr',
+       'expr DOTMUL expr',
+       'expr DOTDIV expr')
+    def expr(self, p):
         return None
     
     @_('id_ref "=" expr ";"',
-       'id_ref "=" matrix ";"',
        'id_ref ADDASSIGN expr ";"',
        'id_ref SUBASSIGN expr ";"',
        'id_ref MULASSIGN expr ";"',
@@ -123,18 +114,6 @@ class MyParser(Parser):
     def relation_expr(self, p):
         return None
     
-    @_('expr DOTADD expr',
-       'expr DOTSUB expr',
-       'expr DOTMUL expr',
-       'expr DOTDIV expr')
-    def matrix_bin_expr(self, p):
-        return None
-    
-    @_('ID "\'"',
-       'matrix "\'"')
-    def matrix_transpose(self, p):
-        return None
-    
     @_('ZEROS "(" INTNUM ")"',
        'ONES "(" INTNUM ")"',
        'EYE "(" INTNUM ")"')
@@ -145,21 +124,11 @@ class MyParser(Parser):
     def matrix_ref(self, p):
         return None
     
-    @_('"[" "]"',
-       '"[" matrix_rows "]"')
-    def matrix(self, p):
-        return None
-    
-    @_('matrix_row',
-      'matrix_rows "," matrix_row')
+    @_('"[" string_of_num "]"',
+      'matrix_rows "," "[" string_of_num "]"')
     def matrix_rows(self, p):
         return None
-    
-    @_('"[" "]"',
-       '"[" string_of_num "]"')
-    def matrix_row(self, p):
-        return None
-    
+
     @_('INTNUM',
        'string_of_num "," INTNUM')
     def string_of_num(self, p):

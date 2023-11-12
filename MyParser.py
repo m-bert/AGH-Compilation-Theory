@@ -1,5 +1,6 @@
 from sly import Parser
 from MyScanner import MyLexer
+import AST
 
 class MyParser(Parser):
     tokens = MyLexer.tokens
@@ -36,15 +37,27 @@ class MyParser(Parser):
     @_('IF "(" relation_expr ")" stmt ELSE stmt',
        'IF "(" relation_expr ")" stmt %prec IFX')
     def if_stmt(self, p):
-        return None
-    
+        condition = p.relation_expr
+        if_body = p.stmt0
+        else_body = p.stmt1 if len(p) > 4 else None
+
+        return AST.IfElseNode(condition, if_body, else_body)
+
     @_('WHILE "(" relation_expr ")" stmt')
     def while_stmt(self, p):
-        return None
+        condition = p.relation_expr
+        body = p.stmt
+
+        return AST.WhileNode(condition, body)
     
     @_('FOR ID "=" id_int ":" id_int stmt')
     def for_stmt(self, p):
-        return None
+        variable = p.ID
+        start = p.id_int0
+        end = p.id_int1
+        body = p.stmt
+
+        return AST.ForNode(variable, start, end, body)
     
     @_('ID',
        'INTNUM')
@@ -83,7 +96,7 @@ class MyParser(Parser):
        'expr MUL expr',
        'expr DIV expr')
     def expr(self, p):
-        return None
+        return AST.BinExpr(p[1], p[0], p[2])
     
     @_('expr DOTADD expr',
        'expr DOTSUB expr',
@@ -98,8 +111,21 @@ class MyParser(Parser):
        'id_ref MULASSIGN expr ";"',
        'id_ref DIVASSIGN expr ";"',)
     def assign_expr(self, p):
-        return None
-    
+        left = p.id_ref
+        operator = p[1]  # Assuming the operator type is accessible like this
+        right = p.expr
+
+        if operator == '=':
+            return AST.AssignNode(left, operator, right)
+        elif operator == '+=':
+            return AST.AddAssignNode(left, operator, right)
+        elif operator == '-=':
+            return AST.SubAssignNode(left, operator, right)
+        elif operator == '*=':
+            return AST.MulAssignNode(left, operator, right)
+        elif operator == '/=':
+            return AST.DivAssignNode(left, operator, right)
+        
     @_('ID',
        'matrix_ref')
     def id_ref(self, p):
@@ -112,13 +138,21 @@ class MyParser(Parser):
        'expr EQ expr',
        'expr NEQ expr',)
     def relation_expr(self, p):
-        return None
+        return AST.RelationExpression(p[1], p[0], p[2])
     
     @_('ZEROS "(" INTNUM ")"',
        'ONES "(" INTNUM ")"',
        'EYE "(" INTNUM ")"')
     def matrix_funcs(self, p):
-        return None
+        func_name = p[0]
+        arg = p[2]
+        
+        if func_name == 'zeros':
+            return AST.ZerosNode(func_name, arg)
+        elif func_name == 'ones':
+            return AST.OnesNode(func_name, arg)
+        elif func_name == 'eye':
+            return AST.EyeNode(func_name, arg)
     
     @_('ID "[" string_of_num "]"')
     def matrix_ref(self, p):
@@ -142,16 +176,16 @@ if __name__ == '__main__':
     print("##### [TEST 1] #####")
     with open("examples/z2/ex1.txt") as file:
         data = file.read()
-        parser.parse(lexer.tokenize(data))
+        ast = parser.parse(lexer.tokenize(data))
+        print(ast)
+    # print("##### [TEST 2] #####")
+    # with open("examples/z2/ex2.txt") as file:
+    #     data = file.read()
+    #     parser.parse(lexer.tokenize(data))
         
-    print("##### [TEST 2] #####")
-    with open("examples/z2/ex2.txt") as file:
-        data = file.read()
-        parser.parse(lexer.tokenize(data))
-        
-    print("##### [TEST 3] #####")
-    with open("examples/z2/ex3.txt") as file:
-        data = file.read()
-        parser.parse(lexer.tokenize(data))
+    # print("##### [TEST 3] #####")
+    # with open("examples/z2/ex3.txt") as file:
+    #     data = file.read()
+    #     parser.parse(lexer.tokenize(data))
     
     

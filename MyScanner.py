@@ -100,7 +100,7 @@ class MyLexer(Lexer):
         self.nesting_level -= 1
         return t
 
-    @_(r"[0-9]*\.[0-9]+([eE][-+]?[0-9]+)?")
+    @_(r"[0-9]*\.[0-9]+([eE][-+]?[0-9]+)?|\d+\.")
     def FLOAT(self, t):
         t.value = float(t.value)  # Convert to a numeric value
         return t

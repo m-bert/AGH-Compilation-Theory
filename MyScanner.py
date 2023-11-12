@@ -100,7 +100,7 @@ class MyLexer(Lexer):
         self.nesting_level -= 1
         return t
 
-    @_(r"\d+\.\d*[E\d+]*|\.\d+")
+    @_(r"[0-9]*\.[0-9]+([eE][-+]?[0-9]+)?|\d+\.")
     def FLOAT(self, t):
         t.value = float(t.value)  # Convert to a numeric value
         return t
@@ -125,37 +125,15 @@ class MyLexer(Lexer):
 
 
 if __name__ == "__main__":
-    data = """A = zeros(5);  # create 5x5 matrix filled with zeros
-                B = ones(7);   # create 7x7 matrix filled with ones
-                I = eye(10);   # create 10x10 matrix filled with ones on diagonal and zeros elsewhere
-                D1 = A.+B' ; # add element-wise A with transpose of B
-                D2 -= A.-B' ; # substract element-wise A with transpose of B
-                D3 *= A.*B' ; # multiply element-wise A with transpose of B
-                D4 /= A./B' ; # divide element-wise A with transpose of B
+    with open("examples/z1/ex1.txt") as f:
+        data = f.read()
 
-                E1 = [ [ 1, 2, 3],
-                    [ 4, 5, 6],
-                    [ 7, 8, 9] ];
+        lexer = MyLexer()
+        tokens = lexer.tokenize(data)
 
-                res1 = 60.500;
-                res2 = 60.;
-                res3 = .500;
-                res4 = 60.52E2;
-                str = "Hello world";
+        for tok in tokens:
+            print(f"({tok.lineno}): {tok.type}({tok.value})")
 
-                a3 = ?b
-
-                if (m==n) { 
-                    if (m >= n) 
-                        print res;
-                }"""
-
-    lexer = MyLexer()
-    tokens = lexer.tokenize(data)
-
-    for tok in tokens:
-        print(f"({tok.lineno}): {tok.type}({tok.value})")
-
-    if (lexer.nesting_level != 0):
-        print("Error: braces are not nested correctly")
+        if (lexer.nesting_level != 0):
+            print("Error: braces are not nested correctly")
 

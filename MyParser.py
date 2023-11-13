@@ -1,6 +1,7 @@
 from sly import Parser
 from MyScanner import MyLexer
 import AST
+from TreePrinter import * 
 
 class MyParser(Parser):
     tokens = MyLexer.tokens
@@ -128,7 +129,7 @@ class MyParser(Parser):
        'STRING')
     def value(self, p):
         try:
-            if(p.INTNUM):
+            if(p.INTNUM or p.INTNUM == 0):
                 return AST.IntNum(p[0])
         except:
             pass
@@ -193,11 +194,17 @@ class MyParser(Parser):
        'id_ref MULASSIGN expr ";"',
        'id_ref DIVASSIGN expr ";"',)
     def assign_expr(self, p):
-        return AST.AssignExpression(p[1], p[0], p[2])
+        return AST.AssignExpression(p[0], p[1], p[2])
         
     @_('ID',
        'matrix_ref')
     def id_ref(self, p):
+        try:
+            if(p.matrix_ref):
+                return p[0]
+        except:
+            pass
+
         return AST.IDRefNode(p[0])
     
     @_('expr LT expr',
@@ -254,22 +261,28 @@ if __name__ == '__main__':
     lexer = MyLexer()
     parser = MyParser()
 
+    tp = TreePrinter()
+
     print("##### [TEST 1] #####")
     with open("examples/z2/ex1.txt") as file:
         data = file.read()
         ast = parser.parse(lexer.tokenize(data))
-        print(ast)
+        # ast.printTree()
 
     print("##### [TEST 2] #####")
     with open("examples/z2/ex2.txt") as file:
         data = file.read()
         ast = parser.parse(lexer.tokenize(data))
-        print(ast)
+        ast.printTree()
         
     print("##### [TEST 3] #####")
     with open("examples/z2/ex3.txt") as file:
         data = file.read()
         ast = parser.parse(lexer.tokenize(data))
         print(ast)
+
+
+
+    
     
     

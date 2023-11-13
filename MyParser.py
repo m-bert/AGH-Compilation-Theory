@@ -134,7 +134,7 @@ class MyParser(Parser):
         except:
             pass
         try:
-            if(p.FLOAT):
+            if(p.FLOAT or p.FLOAT == 0.0):
                 return AST.FloatNum(p[0])
         except:
             pass

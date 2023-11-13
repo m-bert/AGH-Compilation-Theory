@@ -62,7 +62,7 @@ class MyParser(Parser):
         if len(p) == 1:
             return p[0]
         
-        return AST.StatementsNode(p[1])
+        return p[1]
     
     @_('IF "(" relation_expr ")" stmt ELSE stmt',
        'IF "(" relation_expr ")" stmt %prec IFX')
@@ -158,7 +158,7 @@ class MyParser(Parser):
        'matrix_ref',
        'SUB expr',
        '"[" matrix_rows "]"',
-       'expr "\'"')
+       'id_ref "\'"')
     def expr(self, p):
         if len(p) == 1:
             return AST.ExpressionNode(p[0])

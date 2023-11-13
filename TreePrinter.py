@@ -21,7 +21,13 @@ class TreePrinter:
 
     @addToClass(AST.AssignExpression)
     def printTree(self, indent=0):
-        print(self.operator)
+        print(f"{'|  ' * indent}{self.operator}")
+        self.left.printTree(indent + 1)
+        self.right.printTree(indent + 1)
+
+    @addToClass(AST.RelationExpression)
+    def printTree(self, indent=0):
+        print(f"{'|  ' * indent}{self.op}")
         self.left.printTree(indent + 1)
         self.right.printTree(indent + 1)
 
@@ -92,13 +98,53 @@ class TreePrinter:
         print(f"{'|  ' * indent}TRANSPOSE")
         self.expr.printTree(indent + 1)
 
+    @addToClass(AST.BinExpr)
+    def printTree(self, indent=0):
+        print(f"{'|  ' * indent}{self.op}")
+        self.left.printTree(indent + 1)
+        self.right.printTree(indent + 1)
+
+    @addToClass(AST.ForNode)
+    def printTree(self, indent=0):
+        print(f"{'|  ' * indent}FOR")
+        print(f"{'|  ' * (indent + 1)}{self.variable}")
+        print(f"{'|  ' * (indent + 1)}RANGE")
+        self.start.printTree(indent + 2)
+        self.end.printTree(indent + 2)
+        self.body.printTree(indent + 1)
+
+    @addToClass(AST.PrintNode)
+    def printTree(self, indent=0):
+        print(f"{'|  ' * indent}PRINT")
+        self.value.printTree(indent)
+
+    @addToClass(AST.PrintRekNode)
+    def printTree(self, indent=0):
+        for value in self.values:
+            value.printTree(indent)
+
+    @addToClass(AST.WhileNode)
+    def printTree(self, indent=0):
+        print(f"{'|  ' * indent}WHILE")
+        self.condition.printTree(indent)
+        self.body.printTree(indent + 1)
+
+    @addToClass(AST.IfElseNode)
+    def printTree(self, indent=0):
+        print(f"{'|  ' * indent}IF")
+        self.condition.printTree(indent)
+        print(f"{'|  ' * indent}THEN")
+        self.if_body.printTree(indent + 1)
+
+        if(self.else_body == None):
+            return
+        
+        print(f"{'|  ' * indent}ELSE")
+        self.else_body.printTree(indent + 1)
 
     @addToClass(AST.Error)
     def printTree(self, indent=0):
         pass    
         # fill in the body
 
-
-    # define printTree for other classes
-    # ...
 

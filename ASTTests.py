@@ -18,10 +18,10 @@ if __name__ == '__main__':
     with open("examples/z3/ex2.txt") as file:
         data = file.read()
         ast = parser.parse(lexer.tokenize(data))
-        # ast.printTree()
+        ast.printTree()
         
     print("##### [TEST 3] #####")
     with open("examples/z3/ex3.txt") as file:
         data = file.read()
         ast = parser.parse(lexer.tokenize(data))
-        print(ast)
+        ast.printTree()

@@ -1,34 +1,33 @@
 from sly import Parser
 from MyScanner import MyLexer
 import AST
-from TreePrinter import * 
+from TreePrinter import *
+
 
 class MyParser(Parser):
     tokens = MyLexer.tokens
     debugfile = 'parser.out'
-    
+
     precedence = (
         ('nonassoc', IFX),
         ('nonassoc', ELSE),
         ('nonassoc', LTE, GTE, EQ, NEQ, LT, GT),
-        ('left', ADD, SUB),
-        ('left', MUL, DIV),
-        ('left', DOTADD, DOTSUB),
-        ('left', DOTMUL, DOTDIV)
+        ('left', ADD, SUB, DOTADD, DOTSUB),
+        ('left', MUL, DIV, DOTMUL, DOTDIV),
+        ('nonassoc', "'")
     )
-    
+
     @_('statements stmt',
        'stmt')
     def statements(self, p):
         if len(p) == 1:
             return AST.StatementsNode([p[0]])
-        
+
         statements = p[0].statements.copy()
         statements.append(p[1])
 
         return AST.StatementsNode(statements)
 
-    
     @_('";"',
        '"{" statements "}"',
        'if_stmt',
@@ -41,29 +40,29 @@ class MyParser(Parser):
        'RETURN expr ";"')
     def stmt(self, p):
         try:
-            if(p.BREAK):
+            if (p.BREAK):
                 return AST.BreakStatement()
         except:
             pass
         try:
-            if(p.CONTINUE):
+            if (p.CONTINUE):
                 return AST.ContinueStatement()
         except:
             pass
         try:
-            if(p.RETURN):
+            if (p.RETURN):
                 return AST.ReturnStatement(p[1])
         except:
             pass
 
         if p[0] == ";":
             return AST.BlankStatement()
-        
+
         if len(p) == 1:
             return p[0]
-        
+
         return p[1]
-    
+
     @_('IF "(" relation_expr ")" stmt ELSE stmt',
        'IF "(" relation_expr ")" stmt %prec IFX')
     def if_stmt(self, p):
@@ -72,7 +71,7 @@ class MyParser(Parser):
         else_body = None
 
         try:
-            if(p.ELSE):
+            if (p.ELSE):
                 else_body = p[6]
         except:
             pass
@@ -85,7 +84,7 @@ class MyParser(Parser):
         body = p.stmt
 
         return AST.WhileNode(condition, body)
-    
+
     @_('FOR ID "=" id_int ":" id_int stmt')
     def for_stmt(self, p):
         variable = p.ID
@@ -94,25 +93,25 @@ class MyParser(Parser):
         body = p.stmt
 
         return AST.ForNode(variable, start, end, body)
-    
+
     @_('ID',
        'INTNUM')
     def id_int(self, p):
         try:
-            if(p.INTNUM):
+            if (p.INTNUM):
                 return AST.IntNum(p[0])
         except:
             pass
         try:
-            if(p.ID):
+            if (p.ID):
                 return AST.IDNode(p[0])
         except:
             pass
-    
+
     @_('PRINT print_rek ";"')
     def print_stmt(self, p):
         return AST.PrintNode(p[1])
-    
+
     @_('print_rek "," value',
        'value')
     def print_rek(self, p):
@@ -122,35 +121,35 @@ class MyParser(Parser):
             values = [p.value]
 
         return AST.PrintRekNode(values)
-    
+
     @_('INTNUM',
        'FLOAT',
        'ID',
        'STRING')
     def value(self, p):
         try:
-            if(p.INTNUM or p.INTNUM == 0):
+            if (p.INTNUM or p.INTNUM == 0):
                 return AST.IntNum(p[0])
         except:
             pass
         try:
-            if(p.FLOAT or p.FLOAT == 0.0):
+            if (p.FLOAT or p.FLOAT == 0.0):
                 return AST.FloatNum(p[0])
         except:
             pass
         try:
-            if(p.ID):
+            if (p.ID):
                 return AST.IDNode(p[0])
         except:
             pass
         try:
-            if(p.STRING):
+            if (p.STRING):
                 return AST.Variable(p[0])
         except:
             pass
 
         return None
-    
+
     @_('value',
        'assign_expr',
        'relation_expr',
@@ -158,13 +157,13 @@ class MyParser(Parser):
        'matrix_ref',
        'SUB expr',
        '"[" matrix_rows "]"',
-       'id_ref "\'"')
+       'expr "\'"')
     def expr(self, p):
         if len(p) == 1:
             return AST.ExpressionNode(p[0])
-        
+
         try:
-            if(p.SUB):
+            if (p.SUB):
                 return AST.NegationNode(p[1])
         except:
             pass
@@ -173,21 +172,21 @@ class MyParser(Parser):
             return AST.TransposeNode(p[0])
 
         return AST.MatrixNode(p[1])
-    
+
     @_('expr ADD expr',
        'expr SUB expr',
        'expr MUL expr',
        'expr DIV expr')
     def expr(self, p):
         return AST.BinExpr(p[1], p[0], p[2])
-    
+
     @_('expr DOTADD expr',
        'expr DOTSUB expr',
        'expr DOTMUL expr',
        'expr DOTDIV expr')
     def expr(self, p):
         return AST.BinExpr(p[1], p[0], p[2])
-    
+
     @_('id_ref "=" expr ";"',
        'id_ref ADDASSIGN expr ";"',
        'id_ref SUBASSIGN expr ";"',
@@ -195,18 +194,18 @@ class MyParser(Parser):
        'id_ref DIVASSIGN expr ";"',)
     def assign_expr(self, p):
         return AST.AssignExpression(p[0], p[1], p[2])
-        
+
     @_('ID',
        'matrix_ref')
     def id_ref(self, p):
         try:
-            if(p.matrix_ref):
+            if (p.matrix_ref):
                 return p[0]
         except:
             pass
 
         return AST.IDRefNode(p[0])
-    
+
     @_('expr LT expr',
        'expr GT expr',
        'expr LTE expr',
@@ -215,7 +214,7 @@ class MyParser(Parser):
        'expr NEQ expr',)
     def relation_expr(self, p):
         return AST.RelationExpression(p[1], p[0], p[2])
-    
+
     @_('ZEROS "(" INTNUM ")"',
        'ONES "(" INTNUM ")"',
        'EYE "(" INTNUM ")"')
@@ -229,20 +228,20 @@ class MyParser(Parser):
             return AST.OnesNode(func_name, arg)
         elif func_name == 'eye':
             return AST.EyeNode(func_name, arg)
-    
+
     @_('ID "[" string_of_num "]"')
     def matrix_ref(self, p):
         return AST.MatrixRefNode(p[0], p[2])
-    
+
     @_('"[" string_of_num "]"',
-      'matrix_rows "," "[" string_of_num "]"')
+       'matrix_rows "," "[" string_of_num "]"')
     def matrix_rows(self, p):
         if len(p) == 3:
             return AST.MatrixRowsNode([p[1]])
-        
+
         rows = p[0].values.copy()
         rows.append(p[3])
-        
+
         return AST.MatrixRowsNode(rows)
 
     @_('INTNUM',
@@ -255,7 +254,7 @@ class MyParser(Parser):
             values.append(p[2])
 
         return AST.StringOfNumNode(values)
-    
+
 
 if __name__ == '__main__':
     lexer = MyLexer()
@@ -274,15 +273,9 @@ if __name__ == '__main__':
         data = file.read()
         ast = parser.parse(lexer.tokenize(data))
         ast.printTree()
-        
+
     print("##### [TEST 3] #####")
     with open("examples/z2/ex3.txt") as file:
         data = file.read()
         ast = parser.parse(lexer.tokenize(data))
         print(ast)
-
-
-
-    
-    
-    

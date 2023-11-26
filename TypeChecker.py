@@ -63,12 +63,13 @@ class TypeChecker(NodeVisitor):
         # MATRIX INITIALIZATION CHECK
         if (isinstance(node.right, AST.MatrixNode)):
             row_len = -1
-            for row in node.right.values.values:  # xd2
-                if (row_len == -1):
-                    row_len = len(row.values)
-                elif (len(row.values) != row_len):
-                    self.new_error(0, "Incorrect size of matrix rows!")
-                    return
+            if (isinstance(node.right.values, AST.MatrixRowsNode)):
+                for row in node.right.values.values:  # xd2
+                    if (row_len == -1):
+                        row_len = len(row.values)
+                    elif (len(row.values) != row_len):
+                        self.new_error(0, "Incorrect size of matrix rows!")
+                        return
         # -----------------------------
 
     def visit_RelationExpression(self, node):
@@ -114,7 +115,6 @@ class TypeChecker(NodeVisitor):
 
         args = node.values.values
         if (len(args) == 1):
-            # dla tego to jest w ogóle syntax error :))
             if (args[0] >= matrix.size):
                 self.new_error(0, "Out of array scope!")
         elif (len(args) == 2):

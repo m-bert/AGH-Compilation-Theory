@@ -157,6 +157,7 @@ class MyParser(Parser):
        'matrix_ref',
        'SUB expr',
        '"[" matrix_rows "]"',
+       '"[" string_of_num "]"',
        'expr "\'"')
     def expr(self, p):
         if len(p) == 1:

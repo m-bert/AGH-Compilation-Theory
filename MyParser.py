@@ -124,7 +124,7 @@ class MyParser(Parser):
 
     @_('INTNUM',
        'FLOAT',
-       'ID',
+       'id_ref',
        'STRING')
     def value(self, p):
         try:
@@ -154,7 +154,6 @@ class MyParser(Parser):
        'assign_expr',
        'relation_expr',
        'matrix_funcs',
-       'matrix_ref',
        'SUB expr',
        '"[" matrix_rows "]"',
        '"[" string_of_num "]"',

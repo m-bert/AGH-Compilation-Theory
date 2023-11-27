@@ -4,6 +4,7 @@ from SymbolTable import SymbolTable, VariableSymbol
 
 class NodeVisitor(object):
     def visit(self, node):
+        # print(node)
         method = 'visit_' + node.__class__.__name__
         visitor = getattr(self, method, self.generic_visit)
         return visitor(node)
@@ -33,13 +34,19 @@ class TypeChecker(NodeVisitor):
 
     def visit_AssignExpression(self, node):
         # ADD NEW VAR TO SCOPE
+        if (isinstance(node.left, AST.MatrixRefNode)):
+            return  # to jest coś typu x[1] = 0;
         var_name = node.left.value
         var_type = "var"
         size = None
+        row_sizes = []
         # z jakiegoś powodu MatrixNode nie jest z ExpressionNode a reszta tak
         if (isinstance(node.right, AST.MatrixNode)):
-            var_type = "mat"
+            var_type = "matrix"
             size = len(node.right.values.values)
+            for row in node.right.values.values:
+                if (isinstance(row, AST.StringOfNumNode)):
+                    row_sizes.append(len(row.values))
         elif (isinstance(node.right.expr, AST.IntNum)):
             var_type = "int"
         elif (isinstance(node.right.expr, AST.FloatNum)):
@@ -50,10 +57,12 @@ class TypeChecker(NodeVisitor):
         elif (isinstance(node.right.expr, AST.ZerosNode) or
               isinstance(node.right.expr, AST.OnesNode) or
               isinstance(node.right.expr, AST.EyeNode)):
-            var_type = "mat"
+            var_type = "matrix"
             size = node.right.expr.arg
+            for row in range(size):
+                row_sizes.append(size)
 
-        var = VariableSymbol(var_name, var_type, size)
+        var = VariableSymbol(var_name, var_type, size, row_sizes)
         self.current_scope.put(var_name, var)
         # ----------------------
 
@@ -111,14 +120,17 @@ class TypeChecker(NodeVisitor):
             self.new_error(0, "Unknown variable!")
             return
         if (matrix.size == None):
-            self.new_error(0, "wtf")
+            self.new_error(0, "Variable type error!")
 
         args = node.values.values
         if (len(args) == 1):
             if (args[0] >= matrix.size):
                 self.new_error(0, "Out of array scope!")
         elif (len(args) == 2):
-            print("asdf")
+            if (args[0] >= matrix.size):
+                self.new_error(0, "Out of array scope!")
+            elif (args[1] >= matrix.row_sizes[args[0]]):
+                self.new_error(0, "Out of array scope!")
 
         # kurde faja, więcej wymiarów może być
         # może założymy że maks dwuwymiarowe xD
@@ -134,7 +146,10 @@ class TypeChecker(NodeVisitor):
         self.visit(node.expr)
 
     def visit_IDNode(self, node):
-        pass
+        # VARIABLE IN SCOPE CHECK
+        var = self.current_scope.get(node.name)
+        if (var == None):
+            self.new_error(0, "Variable does not exist in this scope!")
 
     def visit_TransposeNode(self, node):
         self.visit(node.expr)
@@ -156,6 +171,7 @@ class TypeChecker(NodeVisitor):
         self.visit(node.value)
 
     def visit_PrintRekNode(self, node):
+        print(node.values)
         for value in node.values:
             self.visit(value)
 
@@ -209,6 +225,6 @@ class TypeChecker(NodeVisitor):
         for name, symbol in scope.symbols.items():
             if (symbol.type == "mat"):
                 print(
-                    f"{scope.name.upper()} -> name: {name}, type: {symbol.type}, size: {symbol.size}")
+                    f"{scope.name.upper()} -> name: {name}, type: {symbol.type}, size: {symbol.size}, rows: {symbol.row_sizes}")
             else:
                 print(f"{scope.name.upper()} -> name: {name}, type: {symbol.type}")

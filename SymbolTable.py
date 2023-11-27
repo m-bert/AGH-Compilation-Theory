@@ -5,9 +5,10 @@ class Symbol():
 
 
 class VariableSymbol(Symbol):
-    def __init__(self, name, type, size=None):
+    def __init__(self, name, type, size=None, row_sizes=[]):
         super().__init__(name, type)
         self.size = size
+        self.row_sizes = row_sizes
 
 
 class SymbolTable(object):

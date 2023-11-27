@@ -18,9 +18,11 @@ if __name__ == '__main__':
       [1,2,3,4,5],
       [1,2]
     ];
+
+    z = "elo" + 4;
     
     break;
-    y = zeros(5);
+    y = zeros(0);
     
     """
 

@@ -34,19 +34,19 @@ class IDNode(Node):
     def __init__(self, name):
         self.name = name
 
-class WhileNode:
+class WhileNode(Node):
     def __init__(self, condition, body):
         self.condition = condition
         self.body = body
 
-class ForNode:
+class ForNode(Node):
     def __init__(self, variable, start, end, body):
         self.variable = variable
         self.start = start
         self.end = end
         self.body = body
 
-class IfElseNode:
+class IfElseNode(Node):
     def __init__(self, condition, if_body, else_body=None):
         self.condition = condition
         self.if_body = if_body

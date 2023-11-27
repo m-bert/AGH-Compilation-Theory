@@ -6,9 +6,43 @@ from SymbolTable import SymbolTable, VariableSymbol
 ttype = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: "")))
 
 ttype["+"]["int"]["int"] = "int"
-ttype["+"]["int"]["int"] = "int"
-ttype["+"]["int"]["int"] = "int"
-ttype["+"]["int"]["int"] = "int"
+ttype["+"]["int"]["float"] = "float"
+ttype["+"]["float"]["int"] = "float"
+ttype["+"]["float"]["float"] = "float"
+
+ttype["-"]["int"]["int"] = "int"
+ttype["-"]["int"]["float"] = "float"
+ttype["-"]["float"]["int"] = "float"
+ttype["-"]["float"]["float"] = "float"
+
+ttype["*"]["int"]["int"] = "int"
+ttype["*"]["int"]["float"] = "float"
+ttype["*"]["float"]["int"] = "float"
+ttype["*"]["float"]["float"] = "float"
+
+ttype["*"]["int"]["matrix"] = "matrix"
+ttype["*"]["float"]["matrix"] = "matrix"
+ttype["*"]["matrix"]["int"] = "matrix"
+ttype["*"]["matrix"]["float"] = "matrix"
+
+ttype["/"]["int"]["int"] = "float"
+ttype["/"]["int"]["float"] = "float"
+ttype["/"]["float"]["int"] = "float"
+ttype["/"]["float"]["float"] = "float"
+
+ttype["/"]["matrix"]["int"] = "matrix"
+ttype["/"]["matrix"]["float"] = "matrix"
+
+ttype[".+"]["matrix"]["matrix"] = "matrix"
+ttype[".-"]["matrix"]["matrix"] = "matrix"
+ttype[".*"]["matrix"]["matrix"] = "matrix"
+ttype["./"]["matrix"]["matrix"] = "matrix"
+
+ttype["+"]["string"]["string"] = "string"
+ttype["*"]["string"]["int"] = "string"
+ttype["*"]["int"]["string"] = "string"
+
+
 
 
 class NodeVisitor(object):
@@ -41,8 +75,12 @@ class TypeChecker(NodeVisitor):
 
     def visit_AssignExpression(self, node):
         # ADD NEW VAR TO SCOPE
+
+        type = self.visit(node.right)
+        
         if (isinstance(node.left, AST.MatrixRefNode)):
             return  # to jest coś typu x[1] = 0;
+        
         var_name = node.left.value
         var_type = "var"
         size = None
@@ -54,6 +92,9 @@ class TypeChecker(NodeVisitor):
             for row in node.right.values.values:
                 if (isinstance(row, AST.StringOfNumNode)):
                     row_sizes.append(len(row.values))
+
+        elif (isinstance(node.right, AST.BinExpr)):
+            var_type = type
 
         elif (isinstance(node.right.expr, AST.IntNum)):
             var_type = "int"
@@ -71,11 +112,10 @@ class TypeChecker(NodeVisitor):
                 row_sizes.append(size)
 
         var = VariableSymbol(var_name, var_type, size, row_sizes)
-        self.current_scope.put(var_name, var)
-        # ----------------------
 
-        self.visit(node.left)
-        self.visit(node.right)
+        if var_type != "":
+            self.current_scope.put(var_name, var)
+            self.visit(node.left)
 
         # MATRIX INITIALIZATION CHECK
         if (isinstance(node.right, AST.MatrixNode)):
@@ -92,7 +132,7 @@ class TypeChecker(NodeVisitor):
     def visit_RelationExpression(self, node):
         self.visit(node.left)
         self.visit(node.right)
-        return "bool"
+        return "int" # 0/1
 
     def visit_IDRefNode(self, node):
         # VARIABLE IN SCOPE CHECK
@@ -172,11 +212,14 @@ class TypeChecker(NodeVisitor):
     def visit_BinExpr(self, node):
         type1 = self.visit(node.left)
         type2 = self.visit(node.right)
-        op = node.operator
+        op = node.op
 
-        # TYPES CHECK
+        type = ttype[op][type1][type2]
 
-        print()
+        if type == "":
+            self.new_error(0, "Unknown type")
+
+        return type
 
     def visit_ForNode(self, node):
         self.current_scope = SymbolTable(self.current_scope, "for")
@@ -221,7 +264,7 @@ class TypeChecker(NodeVisitor):
     def visit_BreakStatement(self, node):
         # IN LOOP CHECK
         scope = self.current_scope
-        while (scope != "program"):
+        while (scope.name != "program"):
             if (scope.name == "for" or scope.name == "while"):
                 return
             scope = scope.parent

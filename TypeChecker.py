@@ -43,8 +43,6 @@ ttype["*"]["string"]["int"] = "string"
 ttype["*"]["int"]["string"] = "string"
 
 
-
-
 class NodeVisitor(object):
     def visit(self, node):
         method = 'visit_' + node.__class__.__name__
@@ -77,10 +75,10 @@ class TypeChecker(NodeVisitor):
         # ADD NEW VAR TO SCOPE
 
         type = self.visit(node.right)
-        
+
         if (isinstance(node.left, AST.MatrixRefNode)):
             return  # to jest coś typu x[1] = 0;
-        
+
         var_name = node.left.value
         var_type = "var"
         size = None
@@ -111,12 +109,6 @@ class TypeChecker(NodeVisitor):
             for row in range(size):
                 row_sizes.append(size)
 
-        var = VariableSymbol(var_name, var_type, size, row_sizes)
-
-        if var_type != "":
-            self.current_scope.put(var_name, var)
-            self.visit(node.left)
-
         # MATRIX INITIALIZATION CHECK
         if (isinstance(node.right, AST.MatrixNode)):
             row_len = -1
@@ -125,20 +117,28 @@ class TypeChecker(NodeVisitor):
                     if (row_len == -1):
                         row_len = len(row.values)
                     elif (len(row.values) != row_len):
-                        self.new_error(node.lineno, "Incorrect size of matrix rows!")
+                        self.new_error(
+                            node.lineno, "Incorrect size of matrix rows!")
                         return
         # -----------------------------
+
+        var = VariableSymbol(var_name, var_type, size, row_sizes)
+
+        if var_type != "":
+            self.current_scope.put(var_name, var)
+            self.visit(node.left)
 
     def visit_RelationExpression(self, node):
         self.visit(node.left)
         self.visit(node.right)
-        return "int" # 0/1
+        return "int"  # 0/1
 
     def visit_IDRefNode(self, node):
         # VARIABLE IN SCOPE CHECK
         var = self.current_scope.get(node.value)
         if (var == None):
-            self.new_error(node.lineno, "Variable does not exist in this scope!")
+            self.new_error(
+                node.lineno, "Variable does not exist in this scope!")
 
     def visit_ExpressionNode(self, node):
         return self.visit(node.expr)
@@ -203,7 +203,7 @@ class TypeChecker(NodeVisitor):
     def visit_IDNode(self, node):
         var = self.current_scope.get(node.name)
         if (var == None):
-            self.new_error(node.lineno, "Unknown variable")
+            self.new_error(node.lineno, "Unknown variable!")
         return var.type
 
     def visit_TransposeNode(self, node):
@@ -217,28 +217,33 @@ class TypeChecker(NodeVisitor):
         type = ttype[op][type1][type2]
 
         if type == "":
-            self.new_error(node.lineno, "Unknown type")
+            self.new_error(node.lineno, "Unknown type!")
 
         if type != "" and type1 == "matrix" and type2 == "matrix":
             m1 = self.current_scope.get(node.left.expr.name)
             m2 = self.current_scope.get(node.right.expr.name)
 
             if m1.row_sizes != m2.row_sizes and (op == ".+" or op == ".-"):
-                self.new_error(node.lineno, "Operations (+|-) on matrices with unequal sizes")
+                self.new_error(
+                    node.lineno, "Operations (+|-) on matrices with unequal sizes!")
 
-            if len(m1.row_sizes) != m2.row_sizes[0] and op == ".*":
-                self.new_error(node.lineno, "Operation (*) on matrices with incorrect sizes")
+            if m1.size == 0 or m2.size == 0:
+                self.new_error(
+                    node.lineno, "Can not perform multiplication on empty matrix!")
+            elif m1.size != m2.row_sizes[0] and op == ".*":
+                self.new_error(
+                    node.lineno, "Operation (*) on matrices with incorrect sizes!")
 
         return type
 
     def visit_ForNode(self, node):
-        self.current_scope = SymbolTable(self.current_scope, "for")
+        self.current_scope = self.current_scope.pushScope("for")
 
         self.visit(node.start)
         self.visit(node.end)
         self.visit(node.body)
 
-        self.current_scope = self.current_scope.parent
+        self.current_scope = self.current_scope.popScope()
 
     def visit_PrintNode(self, node):
         self.visit(node.value)
@@ -248,15 +253,15 @@ class TypeChecker(NodeVisitor):
             self.visit(value)
 
     def visit_WhileNode(self, node):
-        self.current_scope = SymbolTable(self.current_scope, "while")
+        self.current_scope = self.current_scope.pushScope("while")
 
         self.visit(node.condition)
         self.visit(node.body)
 
-        self.current_scope = self.current_scope.parent
+        self.current_scope = self.current_scope.popScope()
 
     def visit_IfElseNode(self, node):
-        self.current_scope = SymbolTable(self.current_scope, "if")
+        self.current_scope = self.current_scope.pushScope("if")
 
         self.visit(node.condition)
         self.visit(node.if_body)
@@ -265,7 +270,7 @@ class TypeChecker(NodeVisitor):
         if (node.else_body == None):
             return
 
-        self.current_scope = SymbolTable(self.current_scope, "else")
+        self.current_scope = self.current_scope.popScope()
 
         self.visit(node.else_body)
 

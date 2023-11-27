@@ -29,9 +29,6 @@ class SymbolTable(object):
         else:
             return None
 
-    def getParentScope(self):
-        return self.parent
-
     def pushScope(self, name):
         new_scope = SymbolTable(parent=self, name=name)
         return new_scope

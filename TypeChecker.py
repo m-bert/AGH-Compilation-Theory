@@ -1,5 +1,14 @@
+from collections import defaultdict
 import AST
 from SymbolTable import SymbolTable, VariableSymbol
+
+# types
+ttype = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: "")))
+
+ttype["+"]["int"]["int"] = "int"
+ttype["+"]["int"]["int"] = "int"
+ttype["+"]["int"]["int"] = "int"
+ttype["+"]["int"]["int"] = "int"
 
 
 class NodeVisitor(object):
@@ -45,6 +54,7 @@ class TypeChecker(NodeVisitor):
             for row in node.right.values.values:
                 if (isinstance(row, AST.StringOfNumNode)):
                     row_sizes.append(len(row.values))
+
         elif (isinstance(node.right.expr, AST.IntNum)):
             var_type = "int"
         elif (isinstance(node.right.expr, AST.FloatNum)):
@@ -82,6 +92,7 @@ class TypeChecker(NodeVisitor):
     def visit_RelationExpression(self, node):
         self.visit(node.left)
         self.visit(node.right)
+        return "bool"
 
     def visit_IDRefNode(self, node):
         # VARIABLE IN SCOPE CHECK
@@ -90,19 +101,22 @@ class TypeChecker(NodeVisitor):
             self.new_error(0, "Variable does not exist in this scope!")
 
     def visit_ExpressionNode(self, node):
-        self.visit(node.expr)
+        return self.visit(node.expr)
 
     def visit_ZerosNode(self, node):
         if (node.arg <= 0):
             self.new_error(0, "Wrong function args!")
+        return "matrix"
 
     def visit_OnesNode(self, node):
         if (node.arg <= 0):
             self.new_error(0, "Wrong function args!")
+        return "matrix"
 
     def visit_EyeNode(self, node):
         if (node.arg <= 0):
             self.new_error(0, "Wrong function args!")
+        return "matrix"
 
     def visit_MatrixNode(self, node):
         self.visit(node.values)
@@ -138,23 +152,31 @@ class TypeChecker(NodeVisitor):
                 self.new_error(0, "Out of array scope!")
 
     def visit_IntNum(self, node):
-        pass
+        return "int"
 
     def visit_FloatNum(self, node):
-        pass
+        return "float"
 
     def visit_NegationNode(self, node):
-        self.visit(node.expr)
+        return self.visit(node.expr)
 
     def visit_IDNode(self, node):
-        pass
+        var = self.current_scope.get(node.name)
+        if (var == None):
+            self.new_error(0, "Unknown variable")
+        return var.type
 
     def visit_TransposeNode(self, node):
-        self.visit(node.expr)
+        return self.visit(node.expr)
 
     def visit_BinExpr(self, node):
-        self.visit(node.left)
-        self.visit(node.right)
+        type1 = self.visit(node.left)
+        type2 = self.visit(node.right)
+        op = node.operator
+
+        # TYPES CHECK
+
+        print()
 
     def visit_ForNode(self, node):
         self.current_scope = SymbolTable(self.current_scope, "for")

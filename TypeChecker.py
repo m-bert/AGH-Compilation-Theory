@@ -125,7 +125,7 @@ class TypeChecker(NodeVisitor):
                     if (row_len == -1):
                         row_len = len(row.values)
                     elif (len(row.values) != row_len):
-                        self.new_error(0, "Incorrect size of matrix rows!")
+                        self.new_error(node.lineno, "Incorrect size of matrix rows!")
                         return
         # -----------------------------
 
@@ -138,24 +138,24 @@ class TypeChecker(NodeVisitor):
         # VARIABLE IN SCOPE CHECK
         var = self.current_scope.get(node.value)
         if (var == None):
-            self.new_error(0, "Variable does not exist in this scope!")
+            self.new_error(node.lineno, "Variable does not exist in this scope!")
 
     def visit_ExpressionNode(self, node):
         return self.visit(node.expr)
 
     def visit_ZerosNode(self, node):
         if (node.arg <= 0):
-            self.new_error(0, "Wrong function args!")
+            self.new_error(node.lineno, "Wrong function args!")
         return "matrix"
 
     def visit_OnesNode(self, node):
         if (node.arg <= 0):
-            self.new_error(0, "Wrong function args!")
+            self.new_error(node.lineno, "Wrong function args!")
         return "matrix"
 
     def visit_EyeNode(self, node):
         if (node.arg <= 0):
-            self.new_error(0, "Wrong function args!")
+            self.new_error(node.lineno, "Wrong function args!")
         return "matrix"
 
     def visit_MatrixNode(self, node):
@@ -174,22 +174,22 @@ class TypeChecker(NodeVisitor):
         # VARIABLE IN SCOPE CHECK
         matrix = self.current_scope.get(node.id)
         if (not matrix):
-            self.new_error(0, "Unknown variable!")
+            self.new_error(node.lineno, "Unknown variable!")
             return
 
         # MATRIX BOUNDS CHCECK
         if (matrix.size == None):
-            self.new_error(0, "Variable type error!")
+            self.new_error(node.lineno, "Variable type error!")
 
         args = node.values.values
         if (len(args) == 1):
             if (args[0] >= matrix.size):
-                self.new_error(0, "Out of array scope!")
+                self.new_error(node.lineno, "Out of array scope!")
         elif (len(args) == 2):
             if (args[0] >= matrix.size):
-                self.new_error(0, "Out of array scope!")
+                self.new_error(node.lineno, "Out of array scope!")
             elif (args[1] >= matrix.row_sizes[args[0]]):
-                self.new_error(0, "Out of array scope!")
+                self.new_error(node.lineno, "Out of array scope!")
 
     def visit_IntNum(self, node):
         return "int"
@@ -203,7 +203,7 @@ class TypeChecker(NodeVisitor):
     def visit_IDNode(self, node):
         var = self.current_scope.get(node.name)
         if (var == None):
-            self.new_error(0, "Unknown variable")
+            self.new_error(node.lineno, "Unknown variable")
         return var.type
 
     def visit_TransposeNode(self, node):
@@ -217,7 +217,7 @@ class TypeChecker(NodeVisitor):
         type = ttype[op][type1][type2]
 
         if type == "":
-            self.new_error(0, "Unknown type")
+            self.new_error(node.lineno, "Unknown type")
 
         return type
 
@@ -268,12 +268,12 @@ class TypeChecker(NodeVisitor):
             if (scope.name == "for" or scope.name == "while"):
                 return
             scope = scope.parent
-        self.new_error(0, "Incorrect break statement use!")
+        self.new_error(node.lineno, "Incorrect break statement use!")
 
     def visit_ContinueStatement(self, node):
         if (not (self.current_scope.name == "for" or
            self.current_scope.name == "while")):
-            self.new_error(0, "Incorrect continue statement use!")
+            self.new_error(node.lineno, "Incorrect continue statement use!")
 
     def visit_ReturnStatement(self, node):
         pass

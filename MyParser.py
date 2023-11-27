@@ -21,12 +21,12 @@ class MyParser(Parser):
        'stmt')
     def statements(self, p):
         if len(p) == 1:
-            return AST.StatementsNode([p[0]])
+            return AST.StatementsNode([p[0]], lineno=p.lineno)
 
         statements = p[0].statements.copy()
         statements.append(p[1])
 
-        return AST.StatementsNode(statements)
+        return AST.StatementsNode(statements, lineno=p.lineno)
 
     @_('";"',
        '"{" statements "}"',
@@ -41,22 +41,22 @@ class MyParser(Parser):
     def stmt(self, p):
         try:
             if (p.BREAK):
-                return AST.BreakStatement()
+                return AST.BreakStatement(lineno=p.lineno)
         except:
             pass
         try:
             if (p.CONTINUE):
-                return AST.ContinueStatement()
+                return AST.ContinueStatement(lineno=p.lineno)
         except:
             pass
         try:
             if (p.RETURN):
-                return AST.ReturnStatement(p[1])
+                return AST.ReturnStatement(p[1], lineno=p.lineno)
         except:
             pass
 
         if p[0] == ";":
-            return AST.BlankStatement()
+            return AST.BlankStatement(lineno=p.lineno)
 
         if len(p) == 1:
             return p[0]
@@ -76,14 +76,14 @@ class MyParser(Parser):
         except:
             pass
 
-        return AST.IfElseNode(condition, if_body, else_body)
+        return AST.IfElseNode(condition, if_body, else_body, lineno=p.lineno)
 
     @_('WHILE "(" relation_expr ")" stmt')
     def while_stmt(self, p):
         condition = p.relation_expr
         body = p.stmt
 
-        return AST.WhileNode(condition, body)
+        return AST.WhileNode(condition, body, lineno=p.lineno)
 
     @_('FOR ID "=" id_int ":" id_int stmt')
     def for_stmt(self, p):
@@ -92,25 +92,25 @@ class MyParser(Parser):
         end = p.id_int1
         body = p.stmt
 
-        return AST.ForNode(variable, start, end, body)
+        return AST.ForNode(variable, start, end, body, lineno=p.lineno)
 
     @_('ID',
        'INTNUM')
     def id_int(self, p):
         try:
             if (p.INTNUM):
-                return AST.IntNum(p[0])
+                return AST.IntNum(p[0], lineno=p.lineno)
         except:
             pass
         try:
             if (p.ID):
-                return AST.IDNode(p[0])
+                return AST.IDNode(p[0], lineno=p.lineno)
         except:
             pass
 
     @_('PRINT print_rek ";"')
     def print_stmt(self, p):
-        return AST.PrintNode(p[1])
+        return AST.PrintNode(p[1],lineno=p.lineno)
 
     @_('print_rek "," value',
        'value')
@@ -120,7 +120,7 @@ class MyParser(Parser):
         else:
             values = [p.value]
 
-        return AST.PrintRekNode(values)
+        return AST.PrintRekNode(values, lineno=p.lineno)
 
     @_('INTNUM',
        'FLOAT',
@@ -129,22 +129,22 @@ class MyParser(Parser):
     def value(self, p):
         try:
             if (p.INTNUM or p.INTNUM == 0):
-                return AST.IntNum(p[0])
+                return AST.IntNum(p[0], lineno=p.lineno)
         except:
             pass
         try:
             if (p.FLOAT or p.FLOAT == 0.0):
-                return AST.FloatNum(p[0])
+                return AST.FloatNum(p[0], lineno=p.lineno)
         except:
             pass
         try:
             if (p.ID):
-                return AST.IDNode(p[0])
+                return AST.IDNode(p[0], lineno=p.lineno)
         except:
             pass
         try:
             if (p.STRING):
-                return AST.Variable(p[0])
+                return AST.Variable(p[0], lineno=p.lineno)
         except:
             pass
 
@@ -161,32 +161,32 @@ class MyParser(Parser):
        'expr "\'"')
     def expr(self, p):
         if len(p) == 1:
-            return AST.ExpressionNode(p[0])
+            return AST.ExpressionNode(p[0], lineno=p.lineno)
 
         try:
             if (p.SUB):
-                return AST.NegationNode(p[1])
+                return AST.NegationNode(p[1], lineno=p.lineno)
         except:
             pass
 
         if p[1] == "'":
-            return AST.TransposeNode(p[0])
+            return AST.TransposeNode(p[0], lineno=p.lineno)
 
-        return AST.MatrixNode(p[1])
+        return AST.MatrixNode(p[1], lineno=p.lineno)
 
     @_('expr ADD expr',
        'expr SUB expr',
        'expr MUL expr',
        'expr DIV expr')
     def expr(self, p):
-        return AST.BinExpr(p[1], p[0], p[2])
+        return AST.BinExpr(p[1], p[0], p[2], lineno=p.lineno)
 
     @_('expr DOTADD expr',
        'expr DOTSUB expr',
        'expr DOTMUL expr',
        'expr DOTDIV expr')
     def expr(self, p):
-        return AST.BinExpr(p[1], p[0], p[2])
+        return AST.BinExpr(p[1], p[0], p[2], lineno=p.lineno)
 
     @_('id_ref "=" expr ";"',
        'id_ref ADDASSIGN expr ";"',
@@ -194,7 +194,7 @@ class MyParser(Parser):
        'id_ref MULASSIGN expr ";"',
        'id_ref DIVASSIGN expr ";"',)
     def assign_expr(self, p):
-        return AST.AssignExpression(p[0], p[1], p[2])
+        return AST.AssignExpression(p[0], p[1], p[2], lineno=p.lineno)
 
     @_('ID',
        'matrix_ref')
@@ -205,7 +205,7 @@ class MyParser(Parser):
         except:
             pass
 
-        return AST.IDRefNode(p[0])
+        return AST.IDRefNode(p[0], lineno=p.lineno)
 
     @_('expr LT expr',
        'expr GT expr',
@@ -214,7 +214,7 @@ class MyParser(Parser):
        'expr EQ expr',
        'expr NEQ expr',)
     def relation_expr(self, p):
-        return AST.RelationExpression(p[1], p[0], p[2])
+        return AST.RelationExpression(p[1], p[0], p[2], lineno=p.lineno)
 
     @_('ZEROS "(" INTNUM ")"',
        'ONES "(" INTNUM ")"',
@@ -224,26 +224,26 @@ class MyParser(Parser):
         arg = p[2]
 
         if func_name == 'zeros':
-            return AST.ZerosNode(func_name, arg)
+            return AST.ZerosNode(func_name, arg, lineno=p.lineno)
         elif func_name == 'ones':
-            return AST.OnesNode(func_name, arg)
+            return AST.OnesNode(func_name, arg, lineno=p.lineno)
         elif func_name == 'eye':
-            return AST.EyeNode(func_name, arg)
+            return AST.EyeNode(func_name, arg, lineno=p.lineno)
 
     @_('ID "[" string_of_num "]"')
     def matrix_ref(self, p):
-        return AST.MatrixRefNode(p[0], p[2])
+        return AST.MatrixRefNode(p[0], p[2], lineno=p.lineno)
 
     @_('"[" string_of_num "]"',
        'matrix_rows "," "[" string_of_num "]"')
     def matrix_rows(self, p):
         if len(p) == 3:
-            return AST.MatrixRowsNode([p[1]])
+            return AST.MatrixRowsNode([p[1]], lineno=p.lineno)
 
         rows = p[0].values.copy()
         rows.append(p[3])
 
-        return AST.MatrixRowsNode(rows)
+        return AST.MatrixRowsNode(rows, lineno=p.lineno)
 
     @_('INTNUM',
        'string_of_num "," INTNUM')
@@ -254,7 +254,7 @@ class MyParser(Parser):
             values = p[0].values.copy()
             values.append(p[2])
 
-        return AST.StringOfNumNode(values)
+        return AST.StringOfNumNode(values, lineno=p.lineno)
 
 
 if __name__ == '__main__':

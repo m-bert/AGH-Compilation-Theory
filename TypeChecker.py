@@ -4,7 +4,6 @@ from SymbolTable import SymbolTable, VariableSymbol
 
 class NodeVisitor(object):
     def visit(self, node):
-        # print(node)
         method = 'visit_' + node.__class__.__name__
         visitor = getattr(self, method, self.generic_visit)
         return visitor(node)
@@ -22,8 +21,7 @@ class NodeVisitor(object):
 class TypeChecker(NodeVisitor):
     def __init__(self):
         self.errors = []
-        self.symbol_table = SymbolTable(None, "program")
-        self.current_scope = self.symbol_table
+        self.current_scope = SymbolTable(None, "program")
 
     def new_error(self, line, message):
         self.errors.append(f"Error at line {line}: {message}")
@@ -86,20 +84,25 @@ class TypeChecker(NodeVisitor):
         self.visit(node.right)
 
     def visit_IDRefNode(self, node):
-        pass
+        # VARIABLE IN SCOPE CHECK
+        var = self.current_scope.get(node.value)
+        if (var == None):
+            self.new_error(0, "Variable does not exist in this scope!")
 
     def visit_ExpressionNode(self, node):
         self.visit(node.expr)
 
     def visit_ZerosNode(self, node):
-        # u nas w sumie parser to robi. Nie wiem czy to dobrze
-        pass
+        if (node.arg <= 0):
+            self.new_error(0, "Wrong function args!")
 
     def visit_OnesNode(self, node):
-        pass
+        if (node.arg <= 0):
+            self.new_error(0, "Wrong function args!")
 
     def visit_EyeNode(self, node):
-        pass
+        if (node.arg <= 0):
+            self.new_error(0, "Wrong function args!")
 
     def visit_MatrixNode(self, node):
         self.visit(node.values)
@@ -114,11 +117,13 @@ class TypeChecker(NodeVisitor):
     def visit_MatrixRefNode(self, node):
         self.visit(node.values)
 
-        # MATRIX BOUNDS CHCECK
-        matrix = self.symbol_table.get(node.id)
+        # VARIABLE IN SCOPE CHECK
+        matrix = self.current_scope.get(node.id)
         if (not matrix):
             self.new_error(0, "Unknown variable!")
             return
+
+        # MATRIX BOUNDS CHCECK
         if (matrix.size == None):
             self.new_error(0, "Variable type error!")
 
@@ -132,11 +137,7 @@ class TypeChecker(NodeVisitor):
             elif (args[1] >= matrix.row_sizes[args[0]]):
                 self.new_error(0, "Out of array scope!")
 
-        # kurde faja, więcej wymiarów może być
-        # może założymy że maks dwuwymiarowe xD
-
     def visit_IntNum(self, node):
-        pass
         pass
 
     def visit_FloatNum(self, node):
@@ -146,10 +147,7 @@ class TypeChecker(NodeVisitor):
         self.visit(node.expr)
 
     def visit_IDNode(self, node):
-        # VARIABLE IN SCOPE CHECK
-        var = self.current_scope.get(node.name)
-        if (var == None):
-            self.new_error(0, "Variable does not exist in this scope!")
+        pass
 
     def visit_TransposeNode(self, node):
         self.visit(node.expr)
@@ -171,7 +169,6 @@ class TypeChecker(NodeVisitor):
         self.visit(node.value)
 
     def visit_PrintRekNode(self, node):
-        print(node.values)
         for value in node.values:
             self.visit(value)
 
@@ -201,9 +198,12 @@ class TypeChecker(NodeVisitor):
 
     def visit_BreakStatement(self, node):
         # IN LOOP CHECK
-        if (not (self.current_scope.name == "for" or
-           self.current_scope.name == "while")):
-            self.new_error(0, "Incorrect break statement use!")
+        scope = self.current_scope
+        while (scope != "program"):
+            if (scope.name == "for" or scope.name == "while"):
+                return
+            scope = scope.parent
+        self.new_error(0, "Incorrect break statement use!")
 
     def visit_ContinueStatement(self, node):
         if (not (self.current_scope.name == "for" or
@@ -223,7 +223,7 @@ class TypeChecker(NodeVisitor):
         if (scope.parent != None):
             self.print_symbols(self, scope.parent)
         for name, symbol in scope.symbols.items():
-            if (symbol.type == "mat"):
+            if (symbol.type == "matrix"):
                 print(
                     f"{scope.name.upper()} -> name: {name}, type: {symbol.type}, size: {symbol.size}, rows: {symbol.row_sizes}")
             else:

@@ -124,7 +124,7 @@ class MyParser(Parser):
 
     @_('INTNUM',
        'FLOAT',
-       'id_ref',
+       'ID',
        'STRING')
     def value(self, p):
         try:
@@ -154,6 +154,7 @@ class MyParser(Parser):
        'assign_expr',
        'relation_expr',
        'matrix_funcs',
+       'matrix_ref',
        'SUB expr',
        '"[" matrix_rows "]"',
        '"[" string_of_num "]"',
@@ -278,4 +279,3 @@ if __name__ == '__main__':
     with open("examples/z2/ex3.txt") as file:
         data = file.read()
         ast = parser.parse(lexer.tokenize(data))
-        print(ast)

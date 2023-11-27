@@ -219,6 +219,16 @@ class TypeChecker(NodeVisitor):
         if type == "":
             self.new_error(node.lineno, "Unknown type")
 
+        if type != "" and type1 == "matrix" and type2 == "matrix":
+            m1 = self.current_scope.get(node.left.expr.name)
+            m2 = self.current_scope.get(node.right.expr.name)
+
+            if m1.row_sizes != m2.row_sizes and (op == ".+" or op == ".-"):
+                self.new_error(node.lineno, "Operations (+|-) on matrices with unequal sizes")
+
+            if len(m1.row_sizes) != m2.row_sizes[0] and op == ".*":
+                self.new_error(node.lineno, "Operation (*) on matrices with incorrect sizes")
+
         return type
 
     def visit_ForNode(self, node):

@@ -112,13 +112,13 @@ class MyParser(Parser):
     def print_stmt(self, p):
         return AST.PrintNode(p[1],lineno=p.lineno)
 
-    @_('print_rek "," value',
-       'value')
+    @_('print_rek "," expr',
+       'expr')
     def print_rek(self, p):
         if len(p) == 3:
-            values = p.print_rek.values + [p.value]
+            values = p.print_rek.values + [p.expr]
         else:
-            values = [p.value]
+            values = [p.expr]
 
         return AST.PrintRekNode(values, lineno=p.lineno)
 

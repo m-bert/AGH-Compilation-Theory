@@ -1,37 +1,50 @@
 
 
 class Memory:
-
-    def __init__(self, name): # memory name
+    def __init__(self, name):
+        self.name = name
+        self.memory = {}
         pass
 
-    def has_key(self, name):  # variable name
-        pass
+    def has_key(self, name):
+        return name in self.memory
 
-    def get(self, name):         # gets from memory current value of variable <name>
-        pass
+    def get(self, name):
+        return self.memory[name]
 
-    def put(self, name, value):  # puts into memory current value of variable <name>
-        pass
+    def put(self, name, value):
+        self.memory[name] = value
 
 
 class MemoryStack:
                                                                              
-    def __init__(self, memory=None): # initialize memory stack with memory <memory>
-        pass
+    def __init__(self, memory=None):
+        self.stack = [memory] if memory else []
 
-    def get(self, name):             # gets from memory stack current value of variable <name>
-        pass
+    def get(self, name):
+        for memory in reversed(self.stack):
+            if memory and memory.has_key(name):
+                return memory.get(name)
+            
+        return None # It shouldn't be reached because typeChecker throws "Out of scope"
 
-    def insert(self, name, value): # inserts into memory stack variable <name> with value <value>
-        pass
+    def insert(self, name, value):
+        if self.stack:
+            self.stack[-1].put(name, value)
 
-    def set(self, name, value): # sets variable <name> to value <value>
-        pass
+    def set(self, name, value):
+        for memory in reversed(self.stack):
+            if memory and memory.has_key(name):
+                memory.put(name, value)
+                return
 
-    def push(self, memory): # pushes memory <memory> onto the stack
-        pass
+        self.insert(name, value)
 
-    def pop(self):          # pops the top memory from the stack
-        pass
+
+    def push(self, memory):
+        self.stack.append(memory)
+
+    def pop(self):
+        if self.stack:
+            return self.stack.pop()
 

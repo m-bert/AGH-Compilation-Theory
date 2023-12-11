@@ -1,14 +1,7 @@
-a = 1;
+a = 0;
 b = 1;
-
-b += 1;
-
-c = a + b;
-
-print c;
-
-# while (b < 1000) {
-#     print b;
-#     b += a;
-#     a = b - a;
-# }
+while (b < 1000) {
+    print b;
+    b += a;
+    a = b - a;
+}

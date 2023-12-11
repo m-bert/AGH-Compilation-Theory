@@ -158,7 +158,8 @@ class MyParser(Parser):
        'SUB expr',
        '"[" matrix_rows "]"',
        '"[" string_of_num "]"',
-       'expr "\'"')
+       'expr "\'"',
+       '"(" expr ")"')
     def expr(self, p):
         if len(p) == 1:
             return AST.ExpressionNode(p[0], lineno=p.lineno)
@@ -171,6 +172,9 @@ class MyParser(Parser):
 
         if p[1] == "'":
             return AST.TransposeNode(p[0], lineno=p.lineno)
+        
+        if p[0] == "(":
+            return AST.ExpressionNode(p[1], lineno=p.lineno)
 
         return AST.MatrixNode(p[1], lineno=p.lineno)
 

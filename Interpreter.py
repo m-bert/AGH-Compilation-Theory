@@ -155,9 +155,10 @@ class Interpreter(object):
             res = self.visit(value)
             
             if isinstance(res, tuple):
-                print(res[0][res[1][0], res[1][1]])
+                print(res[0][res[1][0], res[1][1]], end=' ')
             else:
-                print(res)
+                print(res, end=' ')
+        print()
 
     @when(AST.RelationExpression)
     def visit(self, node):

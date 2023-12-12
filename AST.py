@@ -79,7 +79,7 @@ class AssignExpression(Node):
 class Variable(Node):
     def __init__(self, name, lineno):
         super().__init__(lineno)
-        self.name = name
+        self.name = name.strip("\"")
 
 
 class BinExpr(Node):

@@ -24,6 +24,7 @@ ttype["*"]["int"]["matrix"] = "matrix"
 ttype["*"]["float"]["matrix"] = "matrix"
 ttype["*"]["matrix"]["int"] = "matrix"
 ttype["*"]["matrix"]["float"] = "matrix"
+ttype["*"]["matrix"]["matrix"] = "matrix"
 
 ttype["/"]["int"]["int"] = "float"
 ttype["/"]["int"]["float"] = "float"
@@ -219,18 +220,19 @@ class TypeChecker(NodeVisitor):
         if type == "":
             self.new_error(node.lineno, "Unknown type!")
 
-        if type != "" and type1 == "matrix" and type2 == "matrix":
+        if (type != "" and type1 == "matrix" and type2 == "matrix" 
+            and isinstance(node.left.expr, AST.IDNode) and isinstance(node.right.expr, AST.IDNode)): # x d   X D
             m1 = self.current_scope.get(node.left.expr.name)
             m2 = self.current_scope.get(node.right.expr.name)
 
-            if m1.row_sizes != m2.row_sizes and (op == ".+" or op == ".-"):
+            if m1.row_sizes != m2.row_sizes and (op == ".+" or op == ".-" or op == ".*" or op =="./"):
                 self.new_error(
-                    node.lineno, "Operations (+|-) on matrices with unequal sizes!")
+                    node.lineno, "Operations (.+|.-|.*|./) on matrices with unequal sizes!")
 
             if m1.size == 0 or m2.size == 0:
                 self.new_error(
                     node.lineno, "Can not perform multiplication on empty matrix!")
-            elif m1.size != m2.row_sizes[0] and op == ".*":
+            elif m1.size != m2.row_sizes[0] and op == "*":
                 self.new_error(
                     node.lineno, "Operation (*) on matrices with incorrect sizes!")
 
@@ -238,6 +240,9 @@ class TypeChecker(NodeVisitor):
 
     def visit_ForNode(self, node):
         self.current_scope = self.current_scope.pushScope("for")
+        
+        var = VariableSymbol(node.variable, "int", None, [])
+        self.current_scope.put(node.variable, var)
 
         self.visit(node.start)
         self.visit(node.end)

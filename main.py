@@ -24,7 +24,8 @@ if __name__ == '__main__':
             try:
                 typeChecker.visit(ast)
             except:
-                print("TYPE CHECKER ERROR")
+                print("- TYPE CHECKER ERROR -")
+                typeChecker.print_errors()
             else:
                 interpreter.visit(ast)
                 

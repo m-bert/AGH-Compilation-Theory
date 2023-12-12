@@ -220,7 +220,8 @@ class TypeChecker(NodeVisitor):
         if type == "":
             self.new_error(node.lineno, "Unknown type!")
 
-        if type != "" and type1 == "matrix" and type2 == "matrix":
+        if (type != "" and type1 == "matrix" and type2 == "matrix" 
+            and isinstance(node.left.expr, AST.IDNode) and isinstance(node.right.expr, AST.IDNode)): # x d   X D
             m1 = self.current_scope.get(node.left.expr.name)
             m2 = self.current_scope.get(node.right.expr.name)
 

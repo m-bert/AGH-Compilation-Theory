@@ -230,4 +230,9 @@ class Interpreter(object):
             
     
         self.pop_scope()
+        
+    @when(AST.TransposeNode)
+    def visit(self, node):
+        matrix = self.visit(node.expr)
+        return matrix.T
 

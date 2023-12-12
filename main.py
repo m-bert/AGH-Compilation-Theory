@@ -3,9 +3,7 @@ from MyScanner import MyLexer
 from TypeChecker import TypeChecker
 from Interpreter import Interpreter
 
-# EXAMPLES = ["fibonacci", "pi", "triangle", "sqrt", "primes"]
-EXAMPLES = ["matrix"]
-
+EXAMPLES = ["fibonacci", "pi", "triangle", "sqrt", "primes", "matrix"]
 
 
 if __name__ == '__main__':
@@ -23,5 +21,5 @@ if __name__ == '__main__':
 
             ast = parser.parse(lexer.tokenize(data))
 
-            # typeChecker.visit(ast)
+            typeChecker.visit(ast)
             interpreter.visit(ast)

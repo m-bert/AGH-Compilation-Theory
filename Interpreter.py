@@ -152,9 +152,9 @@ class Interpreter(object):
     @when(AST.PrintRekNode)
     def visit(self, node):
         for value in node.values:
-            res = self.visit(value.expr)
+            res = self.visit(value)
             
-            if not isinstance(res, np.ndarray) and len(res) > 1:
+            if isinstance(res, tuple):
                 print(res[0][res[1][0], res[1][1]])
             else:
                 print(res)

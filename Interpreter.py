@@ -19,8 +19,8 @@ class Interpreter(object):
 
             ".+": lambda A, B: A + B,
             ".-": lambda A, B: A - B,
-            ".*": lambda A, B: A @ B,
-            "./": lambda A, B: A @ np.linalg.inv(B),
+            ".*": lambda A, B: A * B,
+            "./": lambda A, B: A / B,
 
             "+=": lambda a, b: a + b,
             "-=": lambda a, b: a - b,
@@ -63,8 +63,17 @@ class Interpreter(object):
     def visit(self, node):
         r1 = self.visit(node.left)
         r2 = self.visit(node.right)
-
-        return self.ops[node.op](r1, r2)
+        
+        if node.op == "*" and isinstance(r1, np.ndarray) and isinstance(r2, np.ndarray):
+            return r1 @ r2
+        else:
+            return self.ops[node.op](r1, r2)
+        
+    @when(AST.MatrixNode)
+    def visit(self, node):
+        matrix = [row.values for row in node.values.values]
+        
+        return np.array(matrix)
 
     @when(AST.AssignExpression)
     def visit(self, node):

@@ -238,6 +238,9 @@ class TypeChecker(NodeVisitor):
 
     def visit_ForNode(self, node):
         self.current_scope = self.current_scope.pushScope("for")
+        
+        var = VariableSymbol(node.variable, "int", None, [])
+        self.current_scope.put(node.variable, var)
 
         self.visit(node.start)
         self.visit(node.end)
